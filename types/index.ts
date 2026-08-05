@@ -1,8 +1,6 @@
-export interface User {
-    id: string;
-    fullName: string;
-    email: string;
-}
+import type { AuthUserOutput } from "./output/AuthUserOutput";
+
+export type User = AuthUserOutput;
 
 export interface AuthState {
     user: User | null;
