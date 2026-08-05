@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link"
-import { useRouter } from "next/router";
+import { useRouter } from "next/navigation";
 import Cookie from "js-cookie";
 import {LogOut, UserRound} from "lucide-react"
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
@@ -9,6 +9,7 @@ import { logout } from "@/store/slices/authSlice";
 import {Avatar, AvatarFallback} from "@/components/ui/avatar"
 import {
     DropdownMenu,
+    DropdownMenuGroup,
     DropdownMenuContent,
     DropdownMenuItem,
     DropdownMenuLabel,
@@ -40,7 +41,9 @@ export function UserNav() {
             <span className="hidden sm:inline font-medium">{user?.fullName ?? "User"}</span>
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end" className="w-56">
-            <DropdownMenuLabel>{user?.email}</DropdownMenuLabel>
+            <DropdownMenuGroup>
+                <DropdownMenuLabel>{user?.email}</DropdownMenuLabel>
+            </DropdownMenuGroup>
             <DropdownMenuSeparator />
             <DropdownMenuItem render={<Link href="/profile" />}>
             <UserRound />
