@@ -8,7 +8,7 @@ import api from "@/lib/axios";
 export default function RegisterPage() {
     const router = useRouter();
     const [form, setForm] = useState({
-        fullname: "",
+        fullName: "",
         email: "",
         password: "",
     })
@@ -51,8 +51,8 @@ export default function RegisterPage() {
                         </label>
                         <input 
                             type="text"
-                            name="fullname"
-                            value={form.fullname}
+                            name="fullName"
+                            value={form.fullName}
                             onChange={handleChange}
                             required
                             className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
