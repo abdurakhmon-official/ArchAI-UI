@@ -8,7 +8,7 @@ import api from "@/lib/axios";
 export default function RegisterPage() {
     const router = useRouter();
     const [form, setForm] = useState({
-        fullName: "",
+        fullname: "",
         email: "",
         password: "",
     })
@@ -27,10 +27,11 @@ export default function RegisterPage() {
         setError("");
         setLoading(true);
         try {
-            await api.post("/auth/register", form);
+            await api.post("/auth/signup", form);
             router.push("/login");
-        } catch (err: any) {
-            setError(err.response?.data?.message || "Something went wrong");
+        } catch (err) {
+            const message = err instanceof Error ? err.message : "Something went wrong";
+            setError(message);
         } finally {
             setLoading(false);
         }
@@ -50,8 +51,8 @@ export default function RegisterPage() {
                         </label>
                         <input 
                             type="text"
-                            name="fullName"
-                            value={form.fullName}
+                            name="fullname"
+                            value={form.fullname}
                             onChange={handleChange}
                             required
                             className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
