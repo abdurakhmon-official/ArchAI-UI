@@ -1,17 +1,25 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import Cookie from "js-cookie";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { updateUser, logout } from "@/store/slices/authSlice";
 import { services } from "@/lib/services";
+import type { Subject } from "@/types";
 import type { UpdateProfileInput } from "@/types/input/UpdateProfileInput";
 import type { UpdatePasswordInput } from "@/types/input/UpdatePasswordInput";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Badge } from "@/components/ui/badge";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import {
   Card,
   CardHeader,
@@ -48,6 +56,11 @@ export default function ProfilePage() {
     phone: user?.phone ?? "",
   });
   const [saving, setSaving] = useState(false);
+  const [subjects, setSubjects] = useState<Subject[]>([]);
+
+  useEffect(() => {
+    services.subject.list().then((res) => setSubjects(res.data));
+  }, []);
 
   const [passwordForm, setPasswordForm] = useState(emptyPasswordForm);
   const [changingPassword, setChangingPassword] = useState(false);

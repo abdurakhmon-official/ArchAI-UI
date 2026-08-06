@@ -4,14 +4,22 @@ import { useEffect, useState } from "react";
 import { Trash2 } from "lucide-react";
 import { services } from "@/lib/services";
 import { useAppSelector } from "@/store/hooks";
-import type { User } from "@/types";
+import type { Subject, User } from "@/types";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Pager } from "@/components/pagination";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 const PAGE_SIZE = 10;
+const NO_SUBJECT = "__none__";
 
 const ROLE_VARIANT: Record<string, "default" | "secondary" | "outline"> = {
   ADMIN: "default",
@@ -22,6 +30,8 @@ const ROLE_VARIANT: Record<string, "default" | "secondary" | "outline"> = {
 export function AdminUsers() {
   const currentUser = useAppSelector((state) => state.auth.user);
   const [users, setUsers] = useState<User[]>([]);
+  const [subjects, setSubjects] = useState<Subject[]>([]);
+  const [promoteSubject, setPromoteSubject] = useState<Record<string, string>>({});
   const [loading, setLoading] = useState(true);
   const [updatingId, setUpdatingId] = useState<string | null>(null);
   const [deletingId, setDeletingId] = useState<string | null>(null);
@@ -43,10 +53,16 @@ export function AdminUsers() {
     load();
   }, [page]);
 
+  useEffect(() => {
+    services.subject.list().then((res) => setSubjects(res.data));
+  }, []);
+
   const promote = async (id: string) => {
     setUpdatingId(id);
     try {
-      await services.user.updateRole(id, { role: "TEACHER" as never });
+      const chosen = promoteSubject[id];
+      const subject = chosen && chosen !== NO_SUBJECT ? chosen : undefined;
+      await services.user.updateRole(id, { role: "TEACHER" as never, subject });
       await load();
     } finally {
       setUpdatingId(null);
@@ -92,14 +108,34 @@ export function AdminUsers() {
               <div className="flex items-center gap-3 shrink-0">
                 <Badge variant={ROLE_VARIANT[u.role] ?? "outline"}>{u.role}</Badge>
                 {u.role === "USER" && (
-                  <Button
-                    size="sm"
-                    variant="outline"
-                    disabled={updatingId === u.id}
-                    onClick={() => promote(u.id)}
-                  >
-                    {updatingId === u.id ? "..." : "Make teacher"}
-                  </Button>
+                  <>
+                    <Select
+                      value={promoteSubject[u.id] ?? NO_SUBJECT}
+                      onValueChange={(value) =>
+                        setPromoteSubject((prev) => ({ ...prev, [u.id]: value ?? NO_SUBJECT }))
+                      }
+                    >
+                      <SelectTrigger size="sm" className="w-40">
+                        <SelectValue placeholder="Subject" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value={NO_SUBJECT}>No subject yet</SelectItem>
+                        {subjects.map((s) => (
+                          <SelectItem key={s.id} value={s.name}>
+                            {s.name}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                    <Button
+                      size="sm"
+                      variant="outline"
+                      disabled={updatingId === u.id}
+                      onClick={() => promote(u.id)}
+                    >
+                      {updatingId === u.id ? "..." : "Make teacher"}
+                    </Button>
+                  </>
                 )}
                 <Button
                   variant="ghost"

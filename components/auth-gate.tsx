@@ -3,6 +3,7 @@
 import { useEffect, useState, type ReactNode } from "react";
 import Cookie from "js-cookie";
 import { useRouter } from "next/navigation";
+import { toast } from "sonner";
 import { services } from "@/lib/services";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { setCredentials, logout } from "@/store/slices/authSlice";
@@ -40,6 +41,20 @@ export function AuthGate({ children }: { children: ReactNode }) {
     })();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  useEffect(() => {
+    if (!checked || !user) return;
+    if (user.role !== "TEACHER" || user.subject) return;
+
+    toast.warning("Choose your subject to start creating tests.", {
+      duration: 15000,
+      action: {
+        label: "Go to profile",
+        onClick: () => router.push("/profile"),
+      },
+    });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [checked, user?.id, user?.role, user?.subject]);
 
   if (!checked) {
     return (

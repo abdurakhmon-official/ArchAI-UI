@@ -2,4 +2,5 @@
 
  export type UpdateUserRoleInput = {
     role: unknown;
+    subject?: (string | undefined) | null;
 };
