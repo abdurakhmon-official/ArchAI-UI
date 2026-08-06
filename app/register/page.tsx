@@ -21,11 +21,6 @@ const fields: { name: keyof SignupInput; label: string; required?: boolean }[] =
   { name: "fullName", label: "F.I.Sh.", required: true },
   { name: "email", label: "Email", required: true },
   { name: "password", label: "Parol", required: true },
-  { name: "subject", label: "Fan" },
-  { name: "school_name", label: "Maktab nomi" },
-  { name: "region", label: "Viloyat" },
-  { name: "district", label: "Tuman" },
-  { name: "phone", label: "Telefon raqami" },
 ];
 
 export default function RegisterPage() {
@@ -34,11 +29,6 @@ export default function RegisterPage() {
     fullName: "",
     email: "",
     password: "",
-    subject: "",
-    school_name: "",
-    region: "",
-    district: "",
-    phone: "",
   });
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
@@ -66,7 +56,7 @@ export default function RegisterPage() {
       <Card className="w-full max-w-md">
         <CardHeader>
           <CardTitle className="text-2xl">Sign up</CardTitle>
-          <CardDescription>Create your teacher account</CardDescription>
+          <CardDescription>Create your EduTest account</CardDescription>
         </CardHeader>
         <form onSubmit={handleSubmit}>
           <CardContent className="space-y-4">
