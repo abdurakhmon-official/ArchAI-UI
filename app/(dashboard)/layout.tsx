@@ -1,4 +1,5 @@
 import type { ReactNode } from "react";
+import Link from "next/link";
 import { AppSidebar } from "@/components/app-sidebar";
 import { UserNav } from "@/components/user-nav";
 import { AuthGate } from "@/components/auth-gate";
@@ -19,7 +20,9 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
             <div className="flex items-center gap-2">
               <SidebarTrigger />
               <Separator orientation="vertical" className="h-5" />
-              <span className="text-sm text-muted-foreground">EduTest</span>
+              <Link href="/dashboard" className="text-sm text-muted-foreground hover:text-foreground">
+                EduTest
+              </Link>
             </div>
             <UserNav />
           </header>

@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import {LayoutDashboard, FileText, BarChart3, UserRound, Settings} from "lucide-react"
+import {LayoutDashboard, FileText, BarChart3, UserRound, Settings, GraduationCap} from "lucide-react"
 import { useAppSelector } from "@/store/hooks";
 import {
     Sidebar,
@@ -36,9 +36,12 @@ export function AppSidebar() {
     return (
     <Sidebar collapsible="icon">
       <SidebarHeader>
-        <div className="flex items-center gap-2 px-2 py-1.5">
-          <span className="font-semibold text-lg">EduTest</span>
-        </div>
+        <Link href="/dashboard" className="flex items-center gap-2 px-2 py-1.5">
+          <GraduationCap className="size-5 shrink-0 text-primary" />
+          <span className="font-semibold text-lg truncate group-data-[collapsible=icon]:hidden">
+            EduTest
+          </span>
+        </Link>
       </SidebarHeader>
 
       <SidebarContent>
