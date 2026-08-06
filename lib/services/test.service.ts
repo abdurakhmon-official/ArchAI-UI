@@ -9,7 +9,7 @@ export class TestService extends BaseService<TestListItem | TestDetail, CreateTe
   protected BASE_PATH = "tests";
 
   async listBySubject(query: BasicSearch = {}, subject?: string | null) {
-    return this.sendGet<{ items: TestListItem[]; count: number }>("", { ...query, subject });
+    return this.sendGet<{ items: TestListItem[]; count: number }>("/paginated", { ...query, subject });
   }
 
   async submit(id: string, input: SubmitTestInput) {

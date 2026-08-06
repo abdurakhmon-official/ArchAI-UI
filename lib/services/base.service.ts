@@ -9,7 +9,7 @@ export abstract class BaseService<T, TCreateInput = unknown, TUpdateInput = unkn
   }
 
   async listPaged(query: BasicSearch = {}) {
-    return this.sendGet<{ items: T[]; count: number }>("", query);
+    return this.sendGet<{ items: T[]; count: number }>("/paginated", query);
   }
 
   async create(data: TCreateInput) {

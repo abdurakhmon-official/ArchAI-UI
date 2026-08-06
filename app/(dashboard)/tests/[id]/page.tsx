@@ -19,7 +19,6 @@ export default function TakeTestPage() {
   const [loading, setLoading] = useState(true);
   const [answers, setAnswers] = useState<Record<string, string>>({});
   const [submitting, setSubmitting] = useState(false);
-  const [error, setError] = useState("");
   const [startedAt] = useState(() => Date.now());
 
   useEffect(() => {
@@ -40,7 +39,6 @@ export default function TakeTestPage() {
   const handleSubmit = async () => {
     if (!test) return;
     setSubmitting(true);
-    setError("");
     try {
       const payload = {
         answers: test.questions.map((q) => ({
@@ -51,8 +49,8 @@ export default function TakeTestPage() {
       };
       const response = await services.test.submit(id, payload);
       router.push(`/results/${response.data.id}`);
-    } catch (err: any) {
-      setError(err?.response?.data?._message ?? "Something went wrong");
+    } catch {
+      // handled globally by the axios response interceptor (toast)
     } finally {
       setSubmitting(false);
     }
@@ -111,12 +109,6 @@ export default function TakeTestPage() {
           </CardContent>
         </Card>
       ))}
-
-      {error && (
-        <p className="text-sm text-destructive bg-destructive/10 border border-destructive/20 rounded-md px-3 py-2">
-          {error}
-        </p>
-      )}
 
       <Button onClick={handleSubmit} disabled={submitting} size="lg">
         {submitting ? "Submitting..." : "Submit test"}

@@ -7,6 +7,9 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
+import { Pager } from "@/components/pagination";
+
+const PAGE_SIZE = 10;
 
 const ROLE_VARIANT: Record<string, "default" | "secondary" | "outline"> = {
   ADMIN: "default",
@@ -18,12 +21,15 @@ export function AdminUsers() {
   const [users, setUsers] = useState<User[]>([]);
   const [loading, setLoading] = useState(true);
   const [updatingId, setUpdatingId] = useState<string | null>(null);
+  const [page, setPage] = useState(1);
+  const [count, setCount] = useState(0);
 
   const load = async () => {
     setLoading(true);
     try {
-      const response = await services.user.listPaged({ size: 100 });
+      const response = await services.user.listPaged({ page, size: PAGE_SIZE });
       setUsers(response.data.items);
+      setCount(response.data.count);
     } finally {
       setLoading(false);
     }
@@ -31,7 +37,7 @@ export function AdminUsers() {
 
   useEffect(() => {
     load();
-  }, []);
+  }, [page]);
 
   const promote = async (id: string) => {
     setUpdatingId(id);
@@ -54,30 +60,34 @@ export function AdminUsers() {
   }
 
   return (
-    <Card>
-      <CardContent className="p-0 divide-y">
-        {users.map((u) => (
-          <div key={u.id} className="flex items-center justify-between px-4 py-3">
-            <div>
-              <p className="font-medium">{u.fullName}</p>
-              <p className="text-sm text-muted-foreground">{u.email}</p>
+    <div className="space-y-2">
+      <Card>
+        <CardContent className="p-0 divide-y">
+          {users.map((u) => (
+            <div key={u.id} className="flex items-center justify-between px-4 py-3">
+              <div>
+                <p className="font-medium">{u.fullName}</p>
+                <p className="text-sm text-muted-foreground">{u.email}</p>
+              </div>
+              <div className="flex items-center gap-3">
+                <Badge variant={ROLE_VARIANT[u.role] ?? "outline"}>{u.role}</Badge>
+                {u.role === "USER" && (
+                  <Button
+                    size="sm"
+                    variant="outline"
+                    disabled={updatingId === u.id}
+                    onClick={() => promote(u.id)}
+                  >
+                    {updatingId === u.id ? "..." : "Make teacher"}
+                  </Button>
+                )}
+              </div>
             </div>
-            <div className="flex items-center gap-3">
-              <Badge variant={ROLE_VARIANT[u.role] ?? "outline"}>{u.role}</Badge>
-              {u.role === "USER" && (
-                <Button
-                  size="sm"
-                  variant="outline"
-                  disabled={updatingId === u.id}
-                  onClick={() => promote(u.id)}
-                >
-                  {updatingId === u.id ? "..." : "Make teacher"}
-                </Button>
-              )}
-            </div>
-          </div>
-        ))}
-      </CardContent>
-    </Card>
+          ))}
+        </CardContent>
+      </Card>
+
+      <Pager page={page} size={PAGE_SIZE} count={count} onPageChange={setPage} />
+    </div>
   );
 }

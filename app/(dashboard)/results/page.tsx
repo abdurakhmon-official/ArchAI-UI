@@ -6,22 +6,29 @@ import { services } from "@/lib/services";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
+import { Pager } from "@/components/pagination";
 import type {ResultListItem} from "@/types"
+
+const PAGE_SIZE = 10;
 
 export default function ResultsPage() {
   const [results, setResults] = useState<ResultListItem[]>([]);
   const [loading, setLoading] = useState(true);
+  const [page, setPage] = useState(1);
+  const [count, setCount] = useState(0);
 
   useEffect(() => {
     (async function load() {
+      setLoading(true);
       try {
-        const response = await services.result.listPaged({ size: 50 });
+        const response = await services.result.listPaged({ page, size: PAGE_SIZE });
         setResults(response.data.items as ResultListItem[]);
+        setCount(response.data.count);
       } finally {
         setLoading(false);
       }
     })();
-  }, []);
+  }, [page]);
 
   return (
     <div className="space-y-6">
@@ -59,6 +66,8 @@ export default function ResultsPage() {
           </CardContent>
         </Card>
       )}
+
+      <Pager page={page} size={PAGE_SIZE} count={count} onPageChange={setPage} />
     </div>
   );
 }

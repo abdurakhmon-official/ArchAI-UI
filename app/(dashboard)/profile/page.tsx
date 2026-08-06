@@ -39,25 +39,19 @@ export default function ProfilePage() {
     phone: user?.phone ?? "",
   });
   const [saving, setSaving] = useState(false);
-  const [saved, setSaved] = useState(false);
-  const [error, setError] = useState("");
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setForm({ ...form, [e.target.name]: e.target.value });
-    setSaved(false);
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setSaving(true);
-    setSaved(false);
-    setError("");
     try {
       const response = await services.auth.updateProfile(form);
       dispatch(updateUser(response.data));
-      setSaved(true);
-    } catch (err: any) {
-      setError(err?.response?.data?._message ?? "Something went wrong");
+    } catch {
+      // handled globally by the axios response interceptor (toast)
     } finally {
       setSaving(false);
     }
@@ -79,8 +73,6 @@ export default function ProfilePage() {
       district: user?.district ?? "",
       phone: user?.phone ?? "",
     });
-    setSaved(false);
-    setError("");
   };
 
   return (
@@ -120,17 +112,6 @@ export default function ProfilePage() {
                 />
               </FloatingField>
             ))}
-
-            {error && (
-              <p className="sm:col-span-2 lg:col-span-3 text-sm text-destructive bg-destructive/10 border border-destructive/20 rounded-md px-3 py-2">
-                {error}
-              </p>
-            )}
-            {saved && (
-              <p className="sm:col-span-2 lg:col-span-3 text-sm text-green-700 bg-green-50 border border-green-200 rounded-md px-3 py-2 dark:bg-green-950 dark:text-green-400 dark:border-green-900">
-                Saved!
-              </p>
-            )}
           </CardContent>
           <CardFooter className="gap-3">
             <Button type="submit" disabled={saving}>

@@ -46,8 +46,6 @@ export function CreateTestForm() {
   const [duration, setDuration] = useState(30);
   const [questions, setQuestions] = useState<QuestionDraft[]>([{ ...EMPTY_QUESTION }]);
   const [saving, setSaving] = useState(false);
-  const [error, setError] = useState("");
-  const [success, setSuccess] = useState(false);
 
   const updateQuestion = (index: number, patch: Partial<QuestionDraft>) => {
     setQuestions((prev) => prev.map((q, i) => (i === index ? { ...q, ...patch } : q)));
@@ -59,8 +57,6 @@ export function CreateTestForm() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setError("");
-    setSuccess(false);
     setSaving(true);
     try {
       await services.test.create({
@@ -70,13 +66,12 @@ export function CreateTestForm() {
         duration_minutes: duration,
         questions: questions.map((q) => ({ ...q, correct_option: q.correct_option as never })),
       });
-      setSuccess(true);
       setName("");
       setDescription("");
       setDuration(30);
       setQuestions([{ ...EMPTY_QUESTION }]);
-    } catch (err: any) {
-      setError(err?.response?.data?._message ?? "Something went wrong");
+    } catch {
+      // handled globally by the axios response interceptor (toast)
     } finally {
       setSaving(false);
     }
@@ -193,17 +188,6 @@ export function CreateTestForm() {
         <Plus className="size-4" />
         Add question
       </Button>
-
-      {error && (
-        <p className="text-sm text-destructive bg-destructive/10 border border-destructive/20 rounded-md px-3 py-2">
-          {error}
-        </p>
-      )}
-      {success && (
-        <p className="text-sm text-green-700 bg-green-50 border border-green-200 rounded-md px-3 py-2 dark:bg-green-950 dark:text-green-400 dark:border-green-900">
-          Test created!
-        </p>
-      )}
 
       <div>
         <Button type="submit" disabled={saving} size="lg">

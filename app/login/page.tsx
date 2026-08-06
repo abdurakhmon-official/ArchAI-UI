@@ -24,7 +24,6 @@ export default function LoginPage() {
     const router = useRouter()
     const dispatch = useAppDispatch();
     const [form, setForm] = useState<SigninInput>({email: "", password: ""})
-    const [error, setError] = useState("")
     const [loading, setLoading] = useState(false)
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -33,7 +32,6 @@ export default function LoginPage() {
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault()
-        setError("")
         setLoading(true)
         try {
             const response = await services.auth.signIn(form)
@@ -46,9 +44,8 @@ export default function LoginPage() {
 
             dispatch(setCredentials({user, token: accessToken}))
             router.push("/dashboard")
-        } catch (err) {
-            const message = err instanceof Error ? err.message : "something went wrong"
-            setError(message)
+        } catch {
+            // handled globally by the axios response interceptor (toast)
         } finally {
             setLoading(false)
         }
@@ -85,11 +82,6 @@ export default function LoginPage() {
                 required
               />
             </div>
-            {error && (
-              <p className="text-sm text-destructive bg-destructive/10 border border-destructive/20 rounded-md px-3 py-2">
-                {error}
-              </p>
-            )}
           </CardContent>
           <CardFooter className="flex flex-col gap-4">
             <Button type="submit" className="w-full" disabled={loading}>

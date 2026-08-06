@@ -8,16 +8,20 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
+import { Pager } from "@/components/pagination";
+
+const TESTS_PAGE_SIZE = 10;
 
 export function AdminSubjects() {
   const [subjects, setSubjects] = useState<Subject[]>([]);
   const [loading, setLoading] = useState(true);
   const [newName, setNewName] = useState("");
   const [adding, setAdding] = useState(false);
-  const [error, setError] = useState("");
   const [selected, setSelected] = useState<Subject | null>(null);
   const [tests, setTests] = useState<TestListItem[]>([]);
   const [testsLoading, setTestsLoading] = useState(false);
+  const [testsPage, setTestsPage] = useState(1);
+  const [testsCount, setTestsCount] = useState(0);
 
   const loadSubjects = async () => {
     setLoading(true);
@@ -35,14 +39,13 @@ export function AdminSubjects() {
 
   const handleAdd = async (e: React.FormEvent) => {
     e.preventDefault();
-    setError("");
     setAdding(true);
     try {
       await services.subject.create({ name: newName });
       setNewName("");
       await loadSubjects();
-    } catch (err: any) {
-      setError(err?.response?.data?._message ?? "Something went wrong");
+    } catch {
+      // handled globally by the axios response interceptor (toast)
     } finally {
       setAdding(false);
     }
@@ -54,16 +57,25 @@ export function AdminSubjects() {
     await loadSubjects();
   };
 
-  const openSubject = async (subject: Subject) => {
+  const openSubject = (subject: Subject) => {
+    setTestsPage(1);
     setSelected(subject);
-    setTestsLoading(true);
-    try {
-      const response = await services.test.listBySubject({ size: 100 }, subject.name);
-      setTests(response.data.items);
-    } finally {
-      setTestsLoading(false);
-    }
   };
+
+  useEffect(() => {
+    if (!selected) return;
+
+    (async function loadTests() {
+      setTestsLoading(true);
+      try {
+        const response = await services.test.listBySubject({ page: testsPage, size: TESTS_PAGE_SIZE }, selected!.name);
+        setTests(response.data.items);
+        setTestsCount(response.data.count);
+      } finally {
+        setTestsLoading(false);
+      }
+    })();
+  }, [selected, testsPage]);
 
   if (selected) {
     return (
@@ -97,6 +109,8 @@ export function AdminSubjects() {
             </CardContent>
           </Card>
         )}
+
+        <Pager page={testsPage} size={TESTS_PAGE_SIZE} count={testsCount} onPageChange={setTestsPage} />
       </div>
     );
   }
@@ -120,7 +134,6 @@ export function AdminSubjects() {
               Add
             </Button>
           </form>
-          {error && <p className="text-sm text-destructive mt-2">{error}</p>}
         </CardContent>
       </Card>
 

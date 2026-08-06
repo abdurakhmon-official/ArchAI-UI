@@ -8,7 +8,10 @@ import { useAppSelector } from "@/store/hooks";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
+import { Pager } from "@/components/pagination";
 import type {TestListItem} from "@/types"
+
+const PAGE_SIZE = 9;
 
 const BADGE_COLORS = [
   "bg-primary/10 text-primary",
@@ -22,17 +25,27 @@ export default function TestsPage() {
   const user = useAppSelector((state) => state.auth.user);
   const [tests, setTests] = useState<TestListItem[]>([]);
   const [loading, setLoading] = useState(true);
+  const [page, setPage] = useState(1);
+  const [count, setCount] = useState(0);
+  const [prevSubject, setPrevSubject] = useState(user?.subject);
+
+  if (user?.subject !== prevSubject) {
+    setPrevSubject(user?.subject);
+    setPage(1);
+  }
 
   useEffect(() => {
     (async function load() {
+      setLoading(true);
       try {
-        const response = await services.test.listBySubject({ size: 50 }, user?.subject);
+        const response = await services.test.listBySubject({ page, size: PAGE_SIZE }, user?.subject);
         setTests(response.data.items);
+        setCount(response.data.count);
       } finally {
         setLoading(false);
       }
     })();
-  }, [user?.subject]);
+  }, [user?.subject, page]);
 
   return (
     <div className="space-y-6">
@@ -81,6 +94,8 @@ export default function TestsPage() {
           ))}
         </div>
       )}
+
+      <Pager page={page} size={PAGE_SIZE} count={count} onPageChange={setPage} />
     </div>
   );
 }

@@ -30,7 +30,6 @@ export default function RegisterPage() {
     email: "",
     password: "",
   });
-  const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -39,13 +38,12 @@ export default function RegisterPage() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setError("");
     setLoading(true);
     try {
       await services.auth.signUp(form);
       router.push("/login");
-    } catch (err: any) {
-      setError(err?.response?.data?._message ?? "Something went wrong");
+    } catch {
+      // handled globally by the axios response interceptor (toast)
     } finally {
       setLoading(false);
     }
@@ -74,11 +72,6 @@ export default function RegisterPage() {
                 />
               </div>
             ))}
-            {error && (
-              <p className="text-sm text-destructive bg-destructive/10 border border-destructive/20 rounded-md px-3 py-2">
-                {error}
-              </p>
-            )}
           </CardContent>
           <CardFooter className="flex flex-col gap-4">
             <Button type="submit" className="w-full" disabled={loading}>
