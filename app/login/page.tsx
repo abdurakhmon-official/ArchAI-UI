@@ -1,104 +1,109 @@
-"use client";
+"use client"
 
-import { useState } from "react";
-import { useRouter } from "next/navigation";
-import Link from "next/link";
-import Cookie from "js-cookie";
-import api from "@/lib/axios";
-import {useAppDispatch} from "@/store/hooks";
-import {setCredentials} from "@/store/slices/authSlice";
+import React, { useState } from "react"
+import { useRouter } from "next/navigation"
+import Link from "next/link"
+import Cookie from "js-cookie"
+import api from "@/lib/axios"
+import { useAppDispatch } from "@/store/hooks"
+import { setCredentials } from "@/store/slices/authSlice"
+import type { SigninInput } from "@/types/input/SigninInput"
+import { Button } from "@/components/ui/button"
+import { Input } from "@/components/ui/input"
+import { Label } from "@/components/ui/label"
+import {
+    Card,
+    CardHeader,
+    CardTitle,
+    CardDescription,
+    CardContent,
+    CardFooter
+} from "@/components/ui/card"
 
 export default function LoginPage() {
-    const router = useRouter();
+    const router = useRouter()
     const dispatch = useAppDispatch();
-    const [form, setForm] = useState({
-        email: "",
-        password: "",
-    })
-    const [error, setError] = useState("");
-    const [loading, setLoading] = useState(false);
+    const [form, setForm] = useState<SigninInput>({email: "", password: ""})
+    const [error, setError] = useState("")
+    const [loading, setLoading] = useState(false)
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        setForm({
-            ...form,
-            [e.target.name]: e.target.value,
-        })
+        setForm({...form, [e.target.name]: e.target.value})
     }
 
     const handleSubmit = async (e: React.FormEvent) => {
-        e.preventDefault();
-        setError("");
-        setLoading(true);
+        e.preventDefault()
+        setError("")
+        setLoading(true)
         try {
-            const response = await api.post("/auth/signin", form);
-            const {user, token} = response.data;
+            const response = await api.post("/auth/signin", form)
+            const {accessToken} = response.data.data
 
-            Cookie.set("token", token, {expires: 7});
-            dispatch(setCredentials({user, token}));
+            Cookie.set("token", accessToken, {expires: 7})
 
-            router.push("/dashboard");
+            const userResponse = await api.get("/auth/me")
+            const user = userResponse.data.data
+
+            dispatch(setCredentials({user, token: accessToken}))
+            router.push("/dashboard")
         } catch (err) {
-            const message = err instanceof Error ? err.message : "Something went wrong";
-            setError(message);
+            const message = err instanceof Error ? err.message : "something went wrong"
+            setError(message)
         } finally {
-            setLoading(false);
+            setLoading(false)
         }
     }
 
     return (
-        <div className="min-h-screen flex items-center justify-center bg-gray-50 px-4">
-            <div className="w-full max-w-md bg-white p-8 rounded-lg border border-gray-200">
-                <h1 className="text-2xl font-semibold mb-6 text-center">
-                    Login
-                </h1>
-
-                <form onSubmit={handleSubmit} className="space-y-4">
-                    <div>
-                        <label className="block text-sm font-medium mb-1">Email</label>
-                        <input
-                        type="email"
-                        name="email"
-                        value={form.email}
-                        onChange={handleChange}
-                        required
-                        className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                        />
-                    </div>
-
-                    <div>
-                        <label className="block text-sm font-medium mb-1">Password</label>
-                        <input
-                        type="password"
-                        name="password"
-                        value={form.password}
-                        onChange={handleChange}
-                        required
-                        className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                        />
-                    </div>
-
-                    {error && (
-                        <p className="text-red-600 text-sm bg-red-50 border border-red-200 rounded-md px-3 py-2">
-                        {error}
-                        </p>
-                    )}
-
-                    <button
-                        type="submit"
-                        disabled={loading}
-                        className="w-full bg-blue-600 text-white rounded-md py-2 font-medium hover:bg-blue-700 disabled:opacity-50"
-                    >
-                        {loading ? "loading..." : "login"}
-                    </button>
-                </form>
-
-                <p className="mt-4 text-sm text-gray-600 text-center">
-                    Don&apos;t have an account?{" "}
-                    <Link href="/register" className="text-blue-600 hover:underline">
-                        Register
-                    </Link>
-                </p>
+    <div className="min-h-screen flex items-center justify-center bg-muted/40 px-4">
+      <Card className="w-full max-w-md">
+        <CardHeader>
+          <CardTitle className="text-2xl">Login</CardTitle>
+          <CardDescription>Login to EduTest</CardDescription>
+        </CardHeader>
+        <form onSubmit={handleSubmit}>
+          <CardContent className="space-y-4">
+            <div className="space-y-2">
+              <Label htmlFor="email">Email</Label>
+              <Input
+                id="email"
+                type="email"
+                name="email"
+                value={form.email}
+                onChange={handleChange}
+                required
+              />
             </div>
-        </div>
-    )
+            <div className="space-y-2">
+              <Label htmlFor="password">Password</Label>
+              <Input
+                id="password"
+                type="password"
+                name="password"
+                value={form.password}
+                onChange={handleChange}
+                required
+              />
+            </div>
+            {error && (
+              <p className="text-sm text-destructive bg-destructive/10 border border-destructive/20 rounded-md px-3 py-2">
+                {error}
+              </p>
+            )}
+          </CardContent>
+          <CardFooter className="flex flex-col gap-4">
+            <Button type="submit" className="w-full" disabled={loading}>
+              {loading ? "Kirilmoqda..." : "Kirish"}
+            </Button>
+            <p className="text-sm text-muted-foreground text-center">
+              Do&apos;nt you have accoutmi? {" "} 
+              <Link href="/register" className="text-primary hover:underline">
+                Register
+              </Link>
+            </p>
+          </CardFooter>
+        </form>
+      </Card>
+    </div>
+  );
 }
