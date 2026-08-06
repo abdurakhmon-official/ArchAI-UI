@@ -10,6 +10,7 @@ import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Pager } from "@/components/pagination";
+import { NO_SUBJECT } from "@/utils/constant";
 import {
   Select,
   SelectContent,
@@ -19,7 +20,6 @@ import {
 } from "@/components/ui/select";
 
 const PAGE_SIZE = 10;
-const NO_SUBJECT = "__none__";
 
 const ROLE_VARIANT: Record<string, "default" | "secondary" | "outline"> = {
   ADMIN: "default",

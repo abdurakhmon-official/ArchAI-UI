@@ -6,6 +6,7 @@ import Cookie from "js-cookie";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { updateUser, logout } from "@/store/slices/authSlice";
 import { services } from "@/lib/services";
+import { NO_SUBJECT } from "@/utils/constant";
 import type { Subject } from "@/types";
 import type { UpdateProfileInput } from "@/types/input/UpdateProfileInput";
 import type { UpdatePasswordInput } from "@/types/input/UpdatePasswordInput";
@@ -143,18 +144,41 @@ export default function ProfilePage() {
               <Input id="email" type="email" value={user?.email ?? ""} disabled />
             </FloatingField>
 
-            {visibleFields.map((f) => (
-              <FloatingField id={f.name} label={f.label} key={f.name}>
-                <Input
-                  id={f.name}
-                  type="text"
-                  name={f.name}
-                  value={form[f.name] ?? ""}
-                  onChange={handleChange}
-                  required={f.required}
-                />
-              </FloatingField>
-            ))}
+            {visibleFields.map((f) =>
+              f.name === "subject" ? (
+                <FloatingField id={f.name} label={f.label} key={f.name}>
+                  <Select
+                    value={form.subject || NO_SUBJECT}
+                    onValueChange={(value) =>
+                      setForm((prev) => ({ ...prev, subject: value === NO_SUBJECT ? "" : value }))
+                    }
+                  >
+                    <SelectTrigger className="w-full">
+                      <SelectValue placeholder="Select a subject" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value={NO_SUBJECT}>No subject</SelectItem>
+                      {subjects.map((s) => (
+                        <SelectItem key={s.id} value={s.name}>
+                          {s.name}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </FloatingField>
+              ) : (
+                <FloatingField id={f.name} label={f.label} key={f.name}>
+                  <Input
+                    id={f.name}
+                    type="text"
+                    name={f.name}
+                    value={form[f.name] ?? ""}
+                    onChange={handleChange}
+                    required={f.required}
+                  />
+                </FloatingField>
+              )
+            )}
           </CardContent>
           <CardFooter className="gap-3">
             <Button type="submit" disabled={saving}>
