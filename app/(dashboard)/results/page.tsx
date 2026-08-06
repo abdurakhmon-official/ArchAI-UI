@@ -49,16 +49,16 @@ export default function ResultsPage() {
               <Link
                 key={r.id}
                 href={`/results/${r.id}`}
-                className="flex items-center justify-between px-4 py-3 hover:bg-muted transition-colors"
+                className="flex flex-wrap items-center justify-between gap-3 px-4 py-3 hover:bg-muted transition-colors"
               >
-                <div>
-                  <p className="font-medium">{r.test.name}</p>
-                  <p className="text-sm text-muted-foreground">
+                <div className="min-w-0">
+                  <p className="font-medium truncate">{r.test.name}</p>
+                  <p className="text-sm text-muted-foreground truncate">
                     {r.test.subject ?? "—"} · {new Date(r.created_at).toLocaleDateString()} ·{" "}
                     {r.correct_count}/{r.total_questions} correct
                   </p>
                 </div>
-                <Badge variant={r.percent >= 60 ? "default" : "destructive"}>
+                <Badge variant={r.percent >= 60 ? "default" : "destructive"} className="shrink-0">
                   {r.percent}%
                 </Badge>
               </Link>

@@ -97,10 +97,10 @@ export function AdminSubjects() {
           <Card>
             <CardContent className="p-0 divide-y">
               {tests.map((t) => (
-                <div key={t.id} className="flex items-center justify-between px-4 py-3">
-                  <div>
-                    <p className="font-medium">{t.name}</p>
-                    <p className="text-sm text-muted-foreground">
+                <div key={t.id} className="flex items-center justify-between gap-3 px-4 py-3">
+                  <div className="min-w-0">
+                    <p className="font-medium truncate">{t.name}</p>
+                    <p className="text-sm text-muted-foreground truncate">
                       {t._count.questions} questions · {t.duration_minutes} min
                     </p>
                   </div>
@@ -150,11 +150,11 @@ export function AdminSubjects() {
             {subjects.map((s) => (
               <div
                 key={s.id}
-                className="flex items-center justify-between px-4 py-3 hover:bg-muted/60 cursor-pointer"
+                className="flex items-center justify-between gap-3 px-4 py-3 hover:bg-muted/60 cursor-pointer"
                 onClick={() => openSubject(s)}
               >
-                <p className="font-medium">{s.name}</p>
-                <div className="flex items-center gap-1">
+                <p className="font-medium truncate min-w-0">{s.name}</p>
+                <div className="flex items-center gap-1 shrink-0">
                   <Button
                     variant="ghost"
                     size="icon-sm"

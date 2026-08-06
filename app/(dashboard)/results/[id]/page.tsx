@@ -48,7 +48,7 @@ export default function ResultDetailPage() {
   const passed = result.percent >= 60;
 
   return (
-    <div className="space-y-6 max-w-3xl">
+    <div className="space-y-6 max-w-3xl mx-auto">
       <Card className="items-center text-center py-10">
         <div
           className={cn(

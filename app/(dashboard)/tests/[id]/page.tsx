@@ -73,7 +73,7 @@ export default function TakeTestPage() {
   const answeredCount = Object.keys(answers).length;
 
   return (
-    <div className="space-y-6 max-w-3xl">
+    <div className="space-y-6 max-w-3xl mx-auto">
       <div>
         <h1 className="text-2xl font-semibold">{test.name}</h1>
         <p className="text-sm text-muted-foreground">

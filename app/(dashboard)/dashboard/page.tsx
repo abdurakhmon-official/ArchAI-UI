@@ -2,9 +2,19 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { FileText, CheckCircle2, Percent, Trophy, ChevronRight } from "lucide-react";
+import {
+  FileText,
+  CheckCircle2,
+  Percent,
+  Trophy,
+  ChevronRight,
+  ClipboardList,
+  User,
+  Settings,
+} from "lucide-react";
 import { services } from "@/lib/services";
 import { useAppSelector } from "@/store/hooks";
+import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import type { DashboardStats } from "@/types"
@@ -40,16 +50,24 @@ export default function DashboardPage() {
     },
     {
       label: "Average score",
-      value: stats ? `${stats.averageScore}%` : undefined,
+      value: stats && stats.completedTests > 0 ? `${stats.averageScore}%` : "—",
       icon: Percent,
       iconClass: "bg-sky-500/10 text-sky-600 dark:text-sky-400",
     },
     {
       label: "Best score",
-      value: stats ? `${stats.bestScore}%` : undefined,
+      value: stats && stats.completedTests > 0 ? `${stats.bestScore}%` : "—",
       icon: Trophy,
       iconClass: "bg-amber-500/10 text-amber-600 dark:text-amber-400",
     },
+  ];
+
+  const quickLinks = [
+    { href: "/tests", label: "Browse tests", icon: ClipboardList },
+    { href: "/profile", label: "Edit profile", icon: User },
+    ...(user?.role === "TEACHER" || user?.role === "ADMIN"
+      ? [{ href: "/settings", label: "Settings", icon: Settings }]
+      : []),
   ];
 
   return (
@@ -81,53 +99,83 @@ export default function DashboardPage() {
         ))}
       </div>
 
-      <Card>
-        <CardHeader>
-          <CardTitle>Recent tests</CardTitle>
-        </CardHeader>
-        <CardContent className="p-0">
-          {loading ? (
-            <div className="space-y-3 px-6 pb-6">
-              <Skeleton className="h-12 w-full" />
-              <Skeleton className="h-12 w-full" />
-              <Skeleton className="h-12 w-full" />
-            </div>
-          ) : !stats?.recentAttempts.length ? (
-            <p className="text-sm text-muted-foreground px-6 pb-6">No tests completed yet.</p>
-          ) : (
-            <div className="divide-y border-t">
-              {stats.recentAttempts.map((a) => (
-                <Link
-                  key={a.id}
-                  href={`/results/${a.id}`}
-                  className="flex items-center justify-between gap-4 px-6 py-3 hover:bg-muted/60 transition-colors"
-                >
-                  <div className="min-w-0">
-                    <p className="font-medium truncate">{a.test.name}</p>
-                    <p className="text-sm text-muted-foreground">
-                      {a.test.subject ?? "—"} · {new Date(a.created_at).toLocaleDateString()}
-                    </p>
-                  </div>
-                  <div className="flex items-center gap-3 shrink-0">
-                    <span
-                      className={`text-sm font-semibold ${
-                        a.percent >= 80
-                          ? "text-emerald-600 dark:text-emerald-400"
-                          : a.percent >= 60
-                          ? "text-amber-600 dark:text-amber-400"
-                          : "text-destructive"
-                      }`}
-                    >
-                      {a.percent}%
-                    </span>
-                    <ChevronRight className="size-4 text-muted-foreground" />
-                  </div>
-                </Link>
-              ))}
-            </div>
-          )}
-        </CardContent>
-      </Card>
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 items-start">
+        <Card className="lg:col-span-2">
+          <CardHeader>
+            <CardTitle>Recent tests</CardTitle>
+          </CardHeader>
+          <CardContent className="p-0">
+            {loading ? (
+              <div className="space-y-3 px-6 pb-6">
+                <Skeleton className="h-12 w-full" />
+                <Skeleton className="h-12 w-full" />
+                <Skeleton className="h-12 w-full" />
+              </div>
+            ) : !stats?.recentAttempts.length ? (
+              <div className="flex flex-col items-center gap-3 px-6 pb-10 pt-2 text-center">
+                <div className="flex size-12 items-center justify-center rounded-full bg-muted">
+                  <ClipboardList className="size-6 text-muted-foreground" />
+                </div>
+                <p className="text-sm text-muted-foreground">
+                  You haven&apos;t completed any tests yet.
+                </p>
+                <Button render={<Link href="/tests" />} nativeButton={false} size="sm">
+                  Browse tests
+                </Button>
+              </div>
+            ) : (
+              <div className="divide-y border-t">
+                {stats.recentAttempts.map((a) => (
+                  <Link
+                    key={a.id}
+                    href={`/results/${a.id}`}
+                    className="flex items-center justify-between gap-4 px-6 py-3 hover:bg-muted/60 transition-colors"
+                  >
+                    <div className="min-w-0">
+                      <p className="font-medium truncate">{a.test.name}</p>
+                      <p className="text-sm text-muted-foreground">
+                        {a.test.subject ?? "—"} · {new Date(a.created_at).toLocaleDateString()}
+                      </p>
+                    </div>
+                    <div className="flex items-center gap-3 shrink-0">
+                      <span
+                        className={`text-sm font-semibold ${
+                          a.percent >= 80
+                            ? "text-emerald-600 dark:text-emerald-400"
+                            : a.percent >= 60
+                            ? "text-amber-600 dark:text-amber-400"
+                            : "text-destructive"
+                        }`}
+                      >
+                        {a.percent}%
+                      </span>
+                      <ChevronRight className="size-4 text-muted-foreground" />
+                    </div>
+                  </Link>
+                ))}
+              </div>
+            )}
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader>
+            <CardTitle>Quick actions</CardTitle>
+          </CardHeader>
+          <CardContent className="flex flex-col gap-2">
+            {quickLinks.map((link) => (
+              <Link
+                key={link.href}
+                href={link.href}
+                className="flex items-center gap-3 rounded-md border px-3 py-2.5 text-sm hover:bg-muted/60 transition-colors"
+              >
+                <link.icon className="size-4 text-muted-foreground" />
+                {link.label}
+              </Link>
+            ))}
+          </CardContent>
+        </Card>
+      </div>
     </div>
   );
 }

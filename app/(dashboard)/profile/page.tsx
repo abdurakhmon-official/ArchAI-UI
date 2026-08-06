@@ -1,10 +1,13 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
+import Cookie from "js-cookie";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
-import { updateUser } from "@/store/slices/authSlice";
+import { updateUser, logout } from "@/store/slices/authSlice";
 import { services } from "@/lib/services";
 import type { UpdateProfileInput } from "@/types/input/UpdateProfileInput";
+import type { UpdatePasswordInput } from "@/types/input/UpdatePasswordInput";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -28,8 +31,11 @@ const fields: { name: keyof UpdateProfileInput; label: string; required?: boolea
   { name: "phone", label: "Phone number", teacherOnly: true },
 ];
 
+const emptyPasswordForm = { oldPassword: "", newPassword: "", confirmPassword: "" };
+
 export default function ProfilePage() {
   const dispatch = useAppDispatch();
+  const router = useRouter();
   const user = useAppSelector((state) => state.auth.user);
   const visibleFields = fields.filter((f) => !f.teacherOnly || user?.role !== "USER");
 
@@ -43,8 +49,43 @@ export default function ProfilePage() {
   });
   const [saving, setSaving] = useState(false);
 
+  const [passwordForm, setPasswordForm] = useState(emptyPasswordForm);
+  const [changingPassword, setChangingPassword] = useState(false);
+  const [passwordError, setPasswordError] = useState("");
+
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setForm({ ...form, [e.target.name]: e.target.value });
+  };
+
+  const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setPasswordForm({ ...passwordForm, [e.target.name]: e.target.value });
+    setPasswordError("");
+  };
+
+  const handlePasswordSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+
+    if (passwordForm.newPassword !== passwordForm.confirmPassword) {
+      setPasswordError("New passwords do not match");
+      return;
+    }
+
+    setChangingPassword(true);
+    setPasswordError("");
+    try {
+      const input: UpdatePasswordInput = {
+        oldPassword: passwordForm.oldPassword,
+        newPassword: passwordForm.newPassword,
+      };
+      await services.auth.updatePassword(input);
+      Cookie.remove("token");
+      dispatch(logout());
+      router.push("/login");
+    } catch {
+      // handled globally by the axios response interceptor (toast)
+    } finally {
+      setChangingPassword(false);
+    }
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -72,8 +113,8 @@ export default function ProfilePage() {
   };
 
   return (
-    <div className="w-full">
-      <h1 className="text-2xl font-semibold mb-6">Profile</h1>
+    <div className="w-full space-y-6">
+      <h1 className="text-2xl font-semibold">Profile</h1>
       <Card className="w-full">
         <CardHeader>
           <CardTitle className="text-xl">Account Details</CardTitle>
@@ -108,6 +149,63 @@ export default function ProfilePage() {
             </Button>
             <Button type="button" variant="outline" onClick={handleReset} disabled={saving}>
               Reset
+            </Button>
+          </CardFooter>
+        </form>
+      </Card>
+
+      <Card className="w-full">
+        <CardHeader>
+          <CardTitle className="text-xl">Change Password</CardTitle>
+          <CardDescription>You&apos;ll be signed out after changing your password.</CardDescription>
+        </CardHeader>
+
+        <form onSubmit={handlePasswordSubmit}>
+          <CardContent className="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-6">
+            <div className="sm:col-span-2">
+              <FloatingField id="oldPassword" label="Current password">
+                <Input
+                  id="oldPassword"
+                  type="password"
+                  name="oldPassword"
+                  value={passwordForm.oldPassword}
+                  onChange={handlePasswordChange}
+                  required
+                />
+              </FloatingField>
+            </div>
+            <FloatingField id="newPassword" label="New password">
+              <Input
+                id="newPassword"
+                type="password"
+                name="newPassword"
+                value={passwordForm.newPassword}
+                onChange={handlePasswordChange}
+                minLength={6}
+                required
+              />
+            </FloatingField>
+            <FloatingField id="confirmPassword" label="Confirm new password">
+              <Input
+                id="confirmPassword"
+                type="password"
+                name="confirmPassword"
+                value={passwordForm.confirmPassword}
+                onChange={handlePasswordChange}
+                minLength={6}
+                required
+              />
+            </FloatingField>
+
+            {passwordError && (
+              <p className="sm:col-span-2 text-sm text-destructive bg-destructive/10 border border-destructive/20 rounded-md px-3 py-2">
+                {passwordError}
+              </p>
+            )}
+          </CardContent>
+          <CardFooter>
+            <Button type="submit" disabled={changingPassword}>
+              {changingPassword ? "Updating..." : "Update password"}
             </Button>
           </CardFooter>
         </form>
