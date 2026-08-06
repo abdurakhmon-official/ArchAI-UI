@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 import { Check, X } from "lucide-react";
-import api from "@/lib/axios";
+import { services } from "@/lib/services";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { cn } from "@/lib/utils";
@@ -18,8 +18,8 @@ export default function ResultDetailPage() {
   useEffect(() => {
     (async function load() {
       try {
-        const response = await api.get(`/results/${id}`);
-        setResult(response.data.data);
+        const response = await services.result.get(id);
+        setResult(response.data as ResultDetail);
       } finally {
         setLoading(false);
       }

@@ -2,7 +2,8 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import {LayoutDashboard, FileText, BarChart3, UserRound} from "lucide-react"
+import {LayoutDashboard, FileText, BarChart3, UserRound, Settings} from "lucide-react"
+import { useAppSelector } from "@/store/hooks";
 import {
     Sidebar,
     SidebarContent,
@@ -25,6 +26,12 @@ const navItems = [
 
 export function AppSidebar() {
     const pathname = usePathname()
+    const user = useAppSelector((state) => state.auth.user)
+    const canManage = user?.role === "TEACHER" || user?.role === "ADMIN"
+
+    const items = canManage
+      ? [...navItems, {title: "Settings", url: "/settings", icon: Settings}]
+      : navItems
 
     return (
     <Sidebar collapsible="icon">
@@ -39,7 +46,7 @@ export function AppSidebar() {
           <SidebarGroupLabel>Menu</SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
-              {navItems.map((item) => (
+              {items.map((item) => (
                 <SidebarMenuItem key={item.url}>
                 <SidebarMenuButton
                     render={<Link href={item.url} />}

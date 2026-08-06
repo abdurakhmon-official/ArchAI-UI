@@ -3,17 +3,16 @@
 import { useState } from "react";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { updateUser } from "@/store/slices/authSlice";
-import api from "@/lib/axios";
+import { services } from "@/lib/services";
 import type { UpdateProfileInput } from "@/types/input/UpdateProfileInput";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
   Card,
   CardHeader,
   CardTitle,
-  CardDescription,
   CardContent,
   CardFooter,
 } from "@/components/ui/card";
@@ -54,8 +53,8 @@ export default function ProfilePage() {
     setSaved(false);
     setError("");
     try {
-      const response = await api.put("/auth/me", form);
-      dispatch(updateUser(response.data.data));
+      const response = await services.auth.updateProfile(form);
+      dispatch(updateUser(response.data));
       setSaved(true);
     } catch (err: any) {
       setError(err?.response?.data?._message ?? "Something went wrong");
@@ -71,23 +70,46 @@ export default function ProfilePage() {
     .join("")
     .toUpperCase();
 
+  const handleReset = () => {
+    setForm({
+      fullName: user?.fullName ?? "",
+      subject: user?.subject ?? "",
+      school_name: user?.school_name ?? "",
+      region: user?.region ?? "",
+      district: user?.district ?? "",
+      phone: user?.phone ?? "",
+    });
+    setSaved(false);
+    setError("");
+  };
+
   return (
-    <div className="max-w-2xl">
-      <Card>
-        <CardHeader className="flex flex-row items-center gap-4">
-          <Avatar className="size-16">
-            <AvatarFallback className="text-lg">{initials}</AvatarFallback>
+    <div className="w-full">
+      <h1 className="text-2xl font-semibold mb-6">Profile</h1>
+      <Card className="w-full">
+        <CardHeader>
+          <CardTitle className="text-xl">Account Details</CardTitle>
+        </CardHeader>
+        <CardContent className="flex items-center gap-6 pb-2">
+          <Avatar className="size-20 rounded-xl">
+            <AvatarImage src={user?.avatar ?? undefined} alt={user?.fullName} />
+            <AvatarFallback className="text-xl rounded-xl">{initials}</AvatarFallback>
           </Avatar>
           <div>
-            <CardTitle className="text-2xl">{user?.fullName ?? "Teacher profile"}</CardTitle>
-            <CardDescription>{user?.email}</CardDescription>
+            <p className="font-medium">{user?.fullName ?? "Teacher"}</p>
+            <p className="text-sm text-muted-foreground">{user?.email}</p>
+            <p className="text-sm text-muted-foreground">{user?.role}</p>
           </div>
-        </CardHeader>
+        </CardContent>
+
         <form onSubmit={handleSubmit}>
-          <CardContent className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <CardContent className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-6 gap-y-6 pt-4">
+            <FloatingField id="email" label="Email">
+              <Input id="email" type="email" value={user?.email ?? ""} disabled />
+            </FloatingField>
+
             {fields.map((f) => (
-              <div className="space-y-2" key={f.name}>
-                <Label htmlFor={f.name}>{f.label}</Label>
+              <FloatingField id={f.name} label={f.label} key={f.name}>
                 <Input
                   id={f.name}
                   type="text"
@@ -96,26 +118,52 @@ export default function ProfilePage() {
                   onChange={handleChange}
                   required={f.required}
                 />
-              </div>
+              </FloatingField>
             ))}
+
             {error && (
-              <p className="sm:col-span-2 text-sm text-destructive bg-destructive/10 border border-destructive/20 rounded-md px-3 py-2">
+              <p className="sm:col-span-2 lg:col-span-3 text-sm text-destructive bg-destructive/10 border border-destructive/20 rounded-md px-3 py-2">
                 {error}
               </p>
             )}
             {saved && (
-              <p className="sm:col-span-2 text-sm text-green-700 bg-green-50 border border-green-200 rounded-md px-3 py-2 dark:bg-green-950 dark:text-green-400 dark:border-green-900">
+              <p className="sm:col-span-2 lg:col-span-3 text-sm text-green-700 bg-green-50 border border-green-200 rounded-md px-3 py-2 dark:bg-green-950 dark:text-green-400 dark:border-green-900">
                 Saved!
               </p>
             )}
           </CardContent>
-          <CardFooter>
+          <CardFooter className="gap-3">
             <Button type="submit" disabled={saving}>
               {saving ? "Saving..." : "Save changes"}
+            </Button>
+            <Button type="button" variant="outline" onClick={handleReset} disabled={saving}>
+              Reset
             </Button>
           </CardFooter>
         </form>
       </Card>
+    </div>
+  );
+}
+
+function FloatingField({
+  id,
+  label,
+  children,
+}: {
+  id: string;
+  label: string;
+  children: React.ReactNode;
+}) {
+  return (
+    <div className="relative">
+      <Label
+        htmlFor={id}
+        className="absolute -top-2 left-2.5 z-10 bg-card px-1 text-xs text-muted-foreground"
+      >
+        {label}
+      </Label>
+      {children}
     </div>
   );
 }

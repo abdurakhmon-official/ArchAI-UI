@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
-import api from "@/lib/axios";
+import { services } from "@/lib/services";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
@@ -25,8 +25,8 @@ export default function TakeTestPage() {
   useEffect(() => {
     (async function load() {
       try {
-        const response = await api.get(`/tests/${id}`);
-        setTest(response.data.data);
+        const response = await services.test.get(id);
+        setTest(response.data as TestDetail);
       } finally {
         setLoading(false);
       }
@@ -49,8 +49,8 @@ export default function TakeTestPage() {
         })),
         duration_seconds: Math.round((Date.now() - startedAt) / 1000),
       };
-      const response = await api.post(`/tests/${id}/submit`, payload);
-      router.push(`/results/${response.data.data.id}`);
+      const response = await services.test.submit(id, payload);
+      router.push(`/results/${response.data.id}`);
     } catch (err: any) {
       setError(err?.response?.data?._message ?? "Something went wrong");
     } finally {

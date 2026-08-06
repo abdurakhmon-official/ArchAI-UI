@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { FileText, CheckCircle2, Percent, Trophy, ChevronRight } from "lucide-react";
-import api from "@/lib/axios";
+import { services } from "@/lib/services";
 import { useAppSelector } from "@/store/hooks";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -17,8 +17,8 @@ export default function DashboardPage() {
   useEffect(() => {
     (async function load() {
       try {
-        const response = await api.get("/dashboard/stats");
-        setStats(response.data.data);
+        const response = await services.dashboard.stats();
+        setStats(response.data);
       } finally {
         setLoading(false);
       }

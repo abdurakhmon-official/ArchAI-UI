@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import api from "@/lib/axios";
+import { services } from "@/lib/services";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -15,8 +15,8 @@ export default function ResultsPage() {
   useEffect(() => {
     (async function load() {
       try {
-        const response = await api.get("/results", { params: { size: 50 } });
-        setResults(response.data.data.items);
+        const response = await services.result.listPaged({ size: 50 });
+        setResults(response.data.items as ResultListItem[]);
       } finally {
         setLoading(false);
       }

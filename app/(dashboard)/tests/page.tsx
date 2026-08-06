@@ -3,7 +3,8 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { BookOpen } from "lucide-react";
-import api from "@/lib/axios";
+import { services } from "@/lib/services";
+import { useAppSelector } from "@/store/hooks";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -18,23 +19,29 @@ const BADGE_COLORS = [
 ];
 
 export default function TestsPage() {
+  const user = useAppSelector((state) => state.auth.user);
   const [tests, setTests] = useState<TestListItem[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     (async function load() {
       try {
-        const response = await api.get("/tests", { params: { size: 50 } });
-        setTests(response.data.data.items);
+        const response = await services.test.listBySubject({ size: 50 }, user?.subject);
+        setTests(response.data.items);
       } finally {
         setLoading(false);
       }
     })();
-  }, []);
+  }, [user?.subject]);
 
   return (
     <div className="space-y-6">
       <h1 className="text-2xl font-semibold">Tests</h1>
+      {user?.subject && (
+        <p className="text-sm text-muted-foreground -mt-4">
+          Showing tests for your subject: <span className="font-medium">{user.subject}</span>
+        </p>
+      )}
 
       {loading ? (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">

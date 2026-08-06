@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import api from "@/lib/axios";
+import { services } from "@/lib/services";
 import type { SignupInput } from "@/types/input/SignupInput";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -52,7 +52,7 @@ export default function RegisterPage() {
     setError("");
     setLoading(true);
     try {
-      await api.post("/auth/signup", form);
+      await services.auth.signUp(form);
       router.push("/login");
     } catch (err: any) {
       setError(err?.response?.data?._message ?? "Something went wrong");

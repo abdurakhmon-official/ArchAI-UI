@@ -4,7 +4,7 @@ import React, { useState } from "react"
 import { useRouter } from "next/navigation"
 import Link from "next/link"
 import Cookie from "js-cookie"
-import api from "@/lib/axios"
+import { services } from "@/lib/services"
 import { useAppDispatch } from "@/store/hooks"
 import { setCredentials } from "@/store/slices/authSlice"
 import type { SigninInput } from "@/types/input/SigninInput"
@@ -36,13 +36,13 @@ export default function LoginPage() {
         setError("")
         setLoading(true)
         try {
-            const response = await api.post("/auth/signin", form)
-            const {accessToken} = response.data.data
+            const response = await services.auth.signIn(form)
+            const {accessToken} = response.data
 
             Cookie.set("token", accessToken, {expires: 7})
 
-            const userResponse = await api.get("/auth/me")
-            const user = userResponse.data.data
+            const userResponse = await services.auth.me()
+            const user = userResponse.data
 
             dispatch(setCredentials({user, token: accessToken}))
             router.push("/dashboard")

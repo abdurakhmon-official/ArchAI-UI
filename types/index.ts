@@ -80,6 +80,12 @@ export type ResultDetail = {
   answers: Answer[];
 };
 
+export type Subject = {
+  id: string;
+  name: string;
+  created_at: string;
+};
+
 export type ResultListItem = {
   id: string;
   total_questions: number;
