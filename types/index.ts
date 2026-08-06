@@ -7,11 +7,19 @@ export interface AuthState {
     token: string | null;
 }
 
-export interface ProfileState {
-    fullName: string;
-    subject: string;
-    schoolName: string;
-    region: string;
-    district: string;
-    phone: string;
-}
+export type RecentAttempt = {
+  id: string;
+  percent: number;
+  score: number;
+  total_questions: number;
+  created_at: string;
+  test: { id: string; name: string; subject: string | null };
+};
+
+export type DashboardStats = {
+  totalTests: number;
+  completedTests: number;
+  averageScore: number;
+  bestScore: number;
+  recentAttempts: RecentAttempt[];
+};
