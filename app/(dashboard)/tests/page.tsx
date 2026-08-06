@@ -2,12 +2,20 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { FileText } from "lucide-react";
+import { BookOpen } from "lucide-react";
 import api from "@/lib/axios";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import type {TestListItem} from "@/types"
+
+const BADGE_COLORS = [
+  "bg-primary/10 text-primary",
+  "bg-sky-500/10 text-sky-600 dark:text-sky-400",
+  "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400",
+  "bg-amber-500/10 text-amber-600 dark:text-amber-400",
+  "bg-rose-500/10 text-rose-600 dark:text-rose-400",
+];
 
 export default function TestsPage() {
   const [tests, setTests] = useState<TestListItem[]>([]);
@@ -38,14 +46,18 @@ export default function TestsPage() {
         <p className="text-sm text-muted-foreground">No tests available yet.</p>
       ) : (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-          {tests.map((t) => (
+          {tests.map((t, index) => (
             <Card key={t.id}>
               <CardHeader>
-                <div className="flex items-center gap-2 text-muted-foreground text-sm">
-                  <FileText className="size-4" />
-                  {t.subject ?? "General"}
+                <div
+                  className={`flex size-10 items-center justify-center rounded-xl mb-1 ${
+                    BADGE_COLORS[index % BADGE_COLORS.length]
+                  }`}
+                >
+                  <BookOpen className="size-5" />
                 </div>
                 <CardTitle>{t.name}</CardTitle>
+                <p className="text-sm text-muted-foreground">{t.subject ?? "General"}</p>
                 <CardDescription className="line-clamp-2">
                   {t.description ?? "No description"}
                 </CardDescription>

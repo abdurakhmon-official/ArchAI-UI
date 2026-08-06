@@ -40,20 +40,33 @@ export default function ResultDetailPage() {
   }
 
   const stats = [
-    { label: "Correct", value: result.correct_count },
-    { label: "Incorrect", value: result.incorrect_count },
-    { label: "Score", value: result.score },
+    { label: "Correct answers", value: result.correct_count },
+    { label: "Incorrect answers", value: result.incorrect_count },
+    { label: "Score", value: `${result.score}/${result.total_questions}` },
     { label: "Percent", value: `${result.percent}%` },
   ];
+  const passed = result.percent >= 60;
 
   return (
     <div className="space-y-6 max-w-3xl">
-      <div>
-        <h1 className="text-2xl font-semibold">{result.test.name}</h1>
-        <p className="text-sm text-muted-foreground">
+      <Card className="items-center text-center py-10">
+        <div
+          className={cn(
+            "flex size-16 items-center justify-center rounded-full",
+            passed
+              ? "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400"
+              : "bg-destructive/10 text-destructive"
+          )}
+        >
+          {passed ? <Check className="size-8" /> : <X className="size-8" />}
+        </div>
+        <h1 className="text-xl font-semibold mt-4">Test completed!</h1>
+        <p className="text-4xl font-bold mt-2">{result.percent}%</p>
+        <p className="text-sm text-muted-foreground mt-1">{result.test.name}</p>
+        <p className="text-xs text-muted-foreground">
           {result.test.subject ?? "—"} · {new Date(result.created_at).toLocaleString()}
         </p>
-      </div>
+      </Card>
 
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
         {stats.map((s) => (
@@ -67,6 +80,8 @@ export default function ResultDetailPage() {
           </Card>
         ))}
       </div>
+
+      <h2 className="text-lg font-semibold">Answer breakdown</h2>
 
       <div className="space-y-4">
         {result.answers.map((a, index) => (

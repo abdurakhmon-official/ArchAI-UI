@@ -8,6 +8,7 @@ import type { UpdateProfileInput } from "@/types/input/UpdateProfileInput";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import {
   Card,
   CardHeader,
@@ -63,15 +64,27 @@ export default function ProfilePage() {
     }
   };
 
+  const initials = (user?.fullName ?? "U")
+    .split(" ")
+    .map((n) => n[0])
+    .slice(0, 2)
+    .join("")
+    .toUpperCase();
+
   return (
-    <div className="max-w-xl">
+    <div className="max-w-2xl">
       <Card>
-        <CardHeader>
-          <CardTitle className="text-2xl">Teacher Profile</CardTitle>
-          <CardDescription>Update your personal information</CardDescription>
+        <CardHeader className="flex flex-row items-center gap-4">
+          <Avatar className="size-16">
+            <AvatarFallback className="text-lg">{initials}</AvatarFallback>
+          </Avatar>
+          <div>
+            <CardTitle className="text-2xl">{user?.fullName ?? "Teacher profile"}</CardTitle>
+            <CardDescription>{user?.email}</CardDescription>
+          </div>
         </CardHeader>
         <form onSubmit={handleSubmit}>
-          <CardContent className="space-y-4">
+          <CardContent className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             {fields.map((f) => (
               <div className="space-y-2" key={f.name}>
                 <Label htmlFor={f.name}>{f.label}</Label>
@@ -86,12 +99,12 @@ export default function ProfilePage() {
               </div>
             ))}
             {error && (
-              <p className="text-sm text-destructive bg-destructive/10 border border-destructive/20 rounded-md px-3 py-2">
+              <p className="sm:col-span-2 text-sm text-destructive bg-destructive/10 border border-destructive/20 rounded-md px-3 py-2">
                 {error}
               </p>
             )}
             {saved && (
-              <p className="text-sm text-green-700 bg-green-50 border border-green-200 rounded-md px-3 py-2 dark:bg-green-950 dark:text-green-400 dark:border-green-900">
+              <p className="sm:col-span-2 text-sm text-green-700 bg-green-50 border border-green-200 rounded-md px-3 py-2 dark:bg-green-950 dark:text-green-400 dark:border-green-900">
                 Saved!
               </p>
             )}
