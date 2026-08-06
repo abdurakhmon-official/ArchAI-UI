@@ -23,14 +23,15 @@ const BADGE_COLORS = [
 
 export default function TestsPage() {
   const user = useAppSelector((state) => state.auth.user);
+  const subjectFilter = user?.role === "TEACHER" ? user?.subject : undefined;
   const [tests, setTests] = useState<TestListItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [page, setPage] = useState(1);
   const [count, setCount] = useState(0);
-  const [prevSubject, setPrevSubject] = useState(user?.subject);
+  const [prevSubject, setPrevSubject] = useState(subjectFilter);
 
-  if (user?.subject !== prevSubject) {
-    setPrevSubject(user?.subject);
+  if (subjectFilter !== prevSubject) {
+    setPrevSubject(subjectFilter);
     setPage(1);
   }
 
@@ -38,21 +39,21 @@ export default function TestsPage() {
     (async function load() {
       setLoading(true);
       try {
-        const response = await services.test.listBySubject({ page, size: PAGE_SIZE }, user?.subject);
+        const response = await services.test.listBySubject({ page, size: PAGE_SIZE }, subjectFilter);
         setTests(response.data.items);
         setCount(response.data.count);
       } finally {
         setLoading(false);
       }
     })();
-  }, [user?.subject, page]);
+  }, [subjectFilter, page]);
 
   return (
     <div className="space-y-6">
       <h1 className="text-2xl font-semibold">Tests</h1>
-      {user?.subject && (
+      {subjectFilter && (
         <p className="text-sm text-muted-foreground -mt-4">
-          Showing tests for your subject: <span className="font-medium">{user.subject}</span>
+          Showing tests for your subject: <span className="font-medium">{subjectFilter}</span>
         </p>
       )}
 

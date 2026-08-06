@@ -18,9 +18,9 @@ import {
 } from "@/components/ui/card";
 
 const fields: { name: keyof SignupInput; label: string; required?: boolean }[] = [
-  { name: "fullName", label: "F.I.Sh.", required: true },
+  { name: "fullName", label: "Full Name", required: true },
   { name: "email", label: "Email", required: true },
-  { name: "password", label: "Parol", required: true },
+  { name: "password", label: "Password", required: true },
 ];
 
 export default function RegisterPage() {
@@ -78,7 +78,7 @@ export default function RegisterPage() {
               {loading ? "Signing up..." : "Sign up"}
             </Button>
             <p className="text-sm text-muted-foreground text-center">
-              Already have an account?
+              Already have an account?{" "}
               <Link href="/login" className="text-primary hover:underline">
                 Sign in
               </Link>

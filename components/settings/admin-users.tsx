@@ -1,7 +1,9 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { Trash2 } from "lucide-react";
 import { services } from "@/lib/services";
+import { useAppSelector } from "@/store/hooks";
 import type { User } from "@/types";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -18,9 +20,11 @@ const ROLE_VARIANT: Record<string, "default" | "secondary" | "outline"> = {
 };
 
 export function AdminUsers() {
+  const currentUser = useAppSelector((state) => state.auth.user);
   const [users, setUsers] = useState<User[]>([]);
   const [loading, setLoading] = useState(true);
   const [updatingId, setUpdatingId] = useState<string | null>(null);
+  const [deletingId, setDeletingId] = useState<string | null>(null);
   const [page, setPage] = useState(1);
   const [count, setCount] = useState(0);
 
@@ -46,6 +50,22 @@ export function AdminUsers() {
       await load();
     } finally {
       setUpdatingId(null);
+    }
+  };
+
+  const remove = async (id: string) => {
+    if (!window.confirm("Delete this user? This cannot be undone.")) return;
+
+    setDeletingId(id);
+    try {
+      await services.user.delete(id);
+      if (users.length === 1 && page > 1) {
+        setPage((p) => p - 1);
+      } else {
+        await load();
+      }
+    } finally {
+      setDeletingId(null);
     }
   };
 
@@ -81,6 +101,14 @@ export function AdminUsers() {
                     {updatingId === u.id ? "..." : "Make teacher"}
                   </Button>
                 )}
+                <Button
+                  variant="ghost"
+                  size="icon-sm"
+                  disabled={u.id === currentUser?.id || deletingId === u.id}
+                  onClick={() => remove(u.id)}
+                >
+                  <Trash2 className="size-4" />
+                </Button>
               </div>
             </div>
           ))}

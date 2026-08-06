@@ -8,27 +8,30 @@ import type { UpdateProfileInput } from "@/types/input/UpdateProfileInput";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Badge } from "@/components/ui/badge";
 import {
   Card,
   CardHeader,
   CardTitle,
+  CardDescription,
+  CardAction,
   CardContent,
   CardFooter,
 } from "@/components/ui/card";
 
-const fields: { name: keyof UpdateProfileInput; label: string; required?: boolean }[] = [
+const fields: { name: keyof UpdateProfileInput; label: string; required?: boolean; teacherOnly?: boolean }[] = [
   { name: "fullName", label: "Full Name", required: true },
-  { name: "subject", label: "Subject" },
-  { name: "school_name", label: "School name" },
-  { name: "region", label: "Region" },
-  { name: "district", label: "District" },
-  { name: "phone", label: "Phone number" },
+  { name: "subject", label: "Subject", teacherOnly: true },
+  { name: "school_name", label: "School name", teacherOnly: true },
+  { name: "region", label: "Region", teacherOnly: true },
+  { name: "district", label: "District", teacherOnly: true },
+  { name: "phone", label: "Phone number", teacherOnly: true },
 ];
 
 export default function ProfilePage() {
   const dispatch = useAppDispatch();
   const user = useAppSelector((state) => state.auth.user);
+  const visibleFields = fields.filter((f) => !f.teacherOnly || user?.role !== "USER");
 
   const [form, setForm] = useState<UpdateProfileInput>({
     fullName: user?.fullName ?? "",
@@ -57,13 +60,6 @@ export default function ProfilePage() {
     }
   };
 
-  const initials = (user?.fullName ?? "U")
-    .split(" ")
-    .map((n) => n[0])
-    .slice(0, 2)
-    .join("")
-    .toUpperCase();
-
   const handleReset = () => {
     setForm({
       fullName: user?.fullName ?? "",
@@ -81,26 +77,19 @@ export default function ProfilePage() {
       <Card className="w-full">
         <CardHeader>
           <CardTitle className="text-xl">Account Details</CardTitle>
+          <CardDescription>{user?.fullName}</CardDescription>
+          <CardAction>
+            <Badge variant="secondary">{user?.role}</Badge>
+          </CardAction>
         </CardHeader>
-        <CardContent className="flex items-center gap-6 pb-2">
-          <Avatar className="size-20 rounded-xl">
-            <AvatarImage src={user?.avatar ?? undefined} alt={user?.fullName} />
-            <AvatarFallback className="text-xl rounded-xl">{initials}</AvatarFallback>
-          </Avatar>
-          <div>
-            <p className="font-medium">{user?.fullName ?? "Teacher"}</p>
-            <p className="text-sm text-muted-foreground">{user?.email}</p>
-            <p className="text-sm text-muted-foreground">{user?.role}</p>
-          </div>
-        </CardContent>
 
         <form onSubmit={handleSubmit}>
-          <CardContent className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-6 gap-y-6 pt-4">
+          <CardContent className="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-6">
             <FloatingField id="email" label="Email">
               <Input id="email" type="email" value={user?.email ?? ""} disabled />
             </FloatingField>
 
-            {fields.map((f) => (
+            {visibleFields.map((f) => (
               <FloatingField id={f.name} label={f.label} key={f.name}>
                 <Input
                   id={f.name}
