@@ -39,3 +39,8 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# api/geometry dan avtomatik nusxa — yagona manba api/geometry/
+# `predev` va `prebuild` uni har safar qayta yaratadi
+/lib/geometry
+/lib/shared

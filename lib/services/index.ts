@@ -1,15 +1,10 @@
-import { AuthService } from "./auth.service";
-import { TestService } from "./test.service";
-import { ResultService } from "./result.service";
-import { DashboardService } from "./dashboard.service";
-import { SubjectService } from "./subject.service";
-import { UserService } from "./user.service";
+export * from '@/lib/services/archai.service';
+export * from '@/lib/services/storage.service';
 
-export const services = {
-  auth: new AuthService(),
-  test: new TestService(),
-  result: new ResultService(),
-  dashboard: new DashboardService(),
-  subject: new SubjectService(),
-  user: new UserService(),
-};
+// Mavjud servislar klass sifatida eksport qilinadi — bir marta yaratib,
+// tayyor nusxa sifatida beramiz, shunda chaqirish joyi bir xil bo'ladi.
+import { AuthService } from '@/lib/services/auth.service';
+import { UserService } from '@/lib/services/user.service';
+
+export const authService = new AuthService();
+export const userService = new UserService();

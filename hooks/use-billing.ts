@@ -1,0 +1,69 @@
+'use client';
+
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { queryKeys } from '@/lib/query-client';
+import { billingService } from '@/lib/services';
+import type { PaymentProvider, PlanLimits } from '@/types/domain';
+
+export function usePlans() {
+  return useQuery({
+    queryKey: queryKeys.plans,
+    queryFn: billingService.plans,
+    staleTime: 30 * 60_000,
+  });
+}
+
+export function useProviders() {
+  return useQuery({
+    queryKey: queryKeys.providers,
+    queryFn: billingService.providers,
+    staleTime: 10 * 60_000,
+  });
+}
+
+export function useSubscription(enabled = true) {
+  return useQuery({
+    queryKey: queryKeys.subscription,
+    queryFn: billingService.subscription,
+    enabled,
+  });
+}
+
+export function usePlanLimits(): PlanLimits | null {
+  const plans = usePlans();
+  const subscription = useSubscription();
+
+  const active = subscription.data?.subscription;
+  if (active) return active.plan.limits;
+
+  if (subscription.isPending || plans.isPending) return null;
+
+  return plans.data?.find((plan) => plan.code === 'free')?.limits ?? null;
+}
+
+export function useCheckout() {
+  return useMutation({
+    mutationFn: ({
+      planCode,
+      provider,
+      months,
+    }: {
+      planCode: string;
+      provider: PaymentProvider;
+      months?: number;
+    }) => billingService.checkout(planCode, provider, months ?? 1),
+
+    onSuccess: (result) => {
+      window.location.href = result.redirectUrl;
+    },
+  });
+}
+
+export function useCancelSubscription() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: (subscriptionId: string) => billingService.cancel(subscriptionId),
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: queryKeys.subscription }),
+  });
+}

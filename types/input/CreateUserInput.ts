@@ -5,9 +5,6 @@
     email: string;
     password: string;
     role?: unknown;
-    subject?: (string | undefined) | null;
-    school_name?: (string | undefined) | null;
-    region?: (string | undefined) | null;
-    district?: (string | undefined) | null;
     phone?: (string | undefined) | null;
+    locale?: "uz" | "ru" | "en";
 };

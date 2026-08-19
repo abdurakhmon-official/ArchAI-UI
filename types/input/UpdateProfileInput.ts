@@ -2,10 +2,7 @@
 
  export type UpdateProfileInput = {
     fullName: string;
-    subject?: (string | undefined) | null;
-    school_name?: (string | undefined) | null;
-    region?: (string | undefined) | null;
-    district?: (string | undefined) | null;
     phone?: (string | undefined) | null;
-    avatar?: string | undefined;
+    avatar?: (string | undefined) | null;
+    locale?: ("uz" | "ru" | "en") | undefined;
 };
