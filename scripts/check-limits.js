@@ -19,11 +19,17 @@
  * va admin qo'shgan yangi tur yana ko'rinmay qoladi.
  */
 
-const { readFileSync } = require('node:fs');
+const { readFileSync, existsSync } = require('node:fs');
 const { join } = require('node:path');
 
 const API = join(__dirname, '../../api/inputs/generation.input.ts');
 const UI = join(__dirname, '../lib/constructor.ts');
+
+if (!existsSync(API)) {
+  // `ui` alohida repozitoriyadan ham yig'iladi — bu holat xato emas.
+  console.warn("check-limits: api/ topilmadi, o'tkazib yuborildi");
+  process.exit(0);
+}
 
 /**
  * Solishtiriladigan maydonlar — hammasi skalyar va ikki tomonda ham

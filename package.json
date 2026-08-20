@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "sync:geometry": "node ../api/scripts/sync-geometry.js",
+    "sync:geometry": "node scripts/sync-geometry.js",
     "predev": "npm run sync:geometry && npm run check:limits && npm run check:messages && npm run check:server-messages",
     "prebuild": "npm run sync:geometry && npm run check:limits && npm run check:messages && npm run check:server-messages",
     "dev": "next dev",

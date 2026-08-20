@@ -40,7 +40,8 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 
-# api/geometry dan avtomatik nusxa — yagona manba api/geometry/
+# api/geometry dan nusxa. Yagona manba — api/geometry/, lekin `ui`
+# alohida repozitoriyada va Vercel `../api` ni ko'rmaydi, shuning
+# uchun nusxa COMMIT QILINADI. Geometriyani o'zgartirgach
+# `npm run sync:geometry` yuriting va natijani ham commit qiling.
 # `predev` va `prebuild` uni har safar qayta yaratadi
-/lib/geometry
-/lib/shared
