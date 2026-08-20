@@ -12,8 +12,8 @@
         ru?: string | undefined;
         en?: string | undefined;
     } | undefined) | null;
-    unit_price: number;
-    image_url?: (string | undefined) | null;
+    unitPrice: number;
+    imageUrl?: (string | undefined) | null;
     sort?: number;
     active?: boolean;
 };

@@ -1,7 +1,7 @@
 import type { MetadataRoute } from 'next';
 import { getPathname } from '@/i18n/navigation';
 import { routing } from '@/i18n/routing';
-import { fetchPostSlugs } from '@/lib/server-api';
+import { getPostSlugs } from '@/lib/server-api';
 import { SITE_URL } from '@/lib/seo';
 
 /**
@@ -28,12 +28,12 @@ import { SITE_URL } from '@/lib/seo';
  */
 const ROUTES = [
   { href: '/', priority: 1, changeFrequency: 'monthly' },
-  { href: '/konstruktor', priority: 0.9, changeFrequency: 'monthly' },
-  { href: '/uslublar', priority: 0.8, changeFrequency: 'monthly' },
-  { href: '/narxlash', priority: 0.8, changeFrequency: 'monthly' },
+  { href: '/constructor', priority: 0.9, changeFrequency: 'monthly' },
+  { href: '/styles', priority: 0.8, changeFrequency: 'monthly' },
+  { href: '/pricing', priority: 0.8, changeFrequency: 'monthly' },
   { href: '/blog', priority: 0.7, changeFrequency: 'weekly' },
-  { href: '/yordam', priority: 0.6, changeFrequency: 'monthly' },
-  { href: '/biz-haqimizda', priority: 0.5, changeFrequency: 'yearly' },
+  { href: '/help', priority: 0.6, changeFrequency: 'monthly' },
+  { href: '/about', priority: 0.5, changeFrequency: 'yearly' },
 ] as const;
 
 /** Bitta manzilning barcha tillardagi shakllari. */
@@ -64,7 +64,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     API tushib qolgan bo'lsa bo'sh ro'yxat qaytadi va sitemap statik
     sahifalar bilan chiqadi — bu butunlay yiqilishdan yaxshiroq.
   */
-  const posts = await fetchPostSlugs();
+  const posts = await getPostSlugs();
 
   const postPages = posts.flatMap((post) => {
     const languages = Object.fromEntries(

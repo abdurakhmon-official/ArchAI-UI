@@ -93,7 +93,7 @@ export function ResultsView() {
             variant="outline"
             size="sm"
             href={{
-              pathname: '/konstruktor',
+              pathname: '/constructor',
               query: Object.fromEntries(toSearchParams(params)),
             }}
           >
@@ -187,7 +187,7 @@ export function ResultsView() {
           </p>
           <ButtonLink
             size="sm"
-            href={isAuthenticated ? '/narxlash' : '/royxatdan-otish'}
+            href={isAuthenticated ? '/pricing' : '/sign-up'}
             className="mt-4"
           >
             {isAuthenticated ? t('upgrade') : t('signUp')}
@@ -280,7 +280,7 @@ function Failure({
 
         <ButtonLink
           size="sm"
-          href={{ pathname: '/konstruktor', query: Object.fromEntries(toSearchParams(params)) }}
+          href={{ pathname: '/constructor', query: Object.fromEntries(toSearchParams(params)) }}
         >
           <SlidersHorizontal className="size-4" />
           {t('change')}

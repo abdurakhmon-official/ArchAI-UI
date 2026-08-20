@@ -3,13 +3,14 @@
 import { Loader2 } from 'lucide-react';
 import { useTranslations } from 'next-intl';
 import { useSearchParams } from 'next/navigation';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { useSignIn, useSignUp } from '@/hooks/use-auth';
 import { Link, useRouter } from '@/i18n/navigation';
 import { errorFrom } from '@/lib/errors';
+import { authService } from '@/lib/services';
 import { cn } from '@/lib/utils';
 
 /**
@@ -32,9 +33,36 @@ export function AuthForm({ mode }: { mode: Mode }) {
   const mutation = mode === 'signin' ? signIn : signUp;
 
   const [form, setForm] = useState({ fullName: '', email: '', password: '', phone: '' });
+  const [strength, setStrength] = useState<0 | 1 | 2 | 3 | 4 | null>(null);
 
   const detail = mutation.error ? errorFrom(mutation.error) : null;
   const fieldError = (field: string) => detail?.fields[field];
+
+  /*
+    Live strength meter — debounced so we don't fire a request on every
+    keystroke. Signup only: signing in doesn't create a password.
+  */
+  useEffect(() => {
+    if (mode !== 'signup' || !form.password) return;
+
+    let cancelled = false;
+
+    const timeout = setTimeout(() => {
+      authService
+        .passwordStrength({ password: form.password, email: form.email || null, fullName: form.fullName || null })
+        .then((response) => {
+          if (!cancelled) setStrength(response.data.score);
+        })
+        .catch(() => {
+          if (!cancelled) setStrength(null);
+        });
+    }, 400);
+
+    return () => {
+      cancelled = true;
+      clearTimeout(timeout);
+    };
+  }, [mode, form.password, form.email, form.fullName]);
 
   const submit = (event: React.FormEvent) => {
     event.preventDefault();
@@ -52,7 +80,7 @@ export function AuthForm({ mode }: { mode: Mode }) {
         return;
       }
 
-      router.push('/kabinet');
+      router.push('/dashboard');
     };
 
     if (mode === 'signin') {
@@ -104,10 +132,12 @@ export function AuthForm({ mode }: { mode: Mode }) {
         error={fieldError('password')}
         autoComplete={mode === 'signin' ? 'current-password' : 'new-password'}
         required
-        minLength={mode === 'signup' ? 6 : undefined}
+        minLength={mode === 'signup' ? 12 : undefined}
         hint={mode === 'signup' ? t('passwordHint') : undefined}
         onChange={(password) => setForm({ ...form, password })}
       />
+
+      {mode === 'signup' && form.password ? <PasswordStrengthMeter score={strength} /> : null}
 
       {/*
         Parolni unutdim — faqat kirishda.
@@ -116,7 +146,7 @@ export function AuthForm({ mode }: { mode: Mode }) {
       */}
       {mode === 'signin' ? (
         <p className="-mt-1 text-end text-sm">
-          <Link href="/parolni-unutdim" className="text-muted-foreground hover:text-foreground">
+          <Link href="/forgot-password" className="text-muted-foreground hover:text-foreground">
             {t('forgotLink')}
           </Link>
         </p>
@@ -150,7 +180,7 @@ export function AuthForm({ mode }: { mode: Mode }) {
       <p className="text-center text-sm text-muted-foreground">
         {mode === 'signin' ? t('noAccount') : t('haveAccount')}{' '}
         <Link
-          href={mode === 'signin' ? '/royxatdan-otish' : '/kirish'}
+          href={mode === 'signin' ? '/sign-up' : '/sign-in'}
           className="font-medium text-primary hover:underline"
         >
           {mode === 'signin' ? t('signUpAction') : t('signInAction')}
@@ -198,6 +228,36 @@ function Field({ id, label, value, error, hint, onChange, ...props }: FieldProps
           {hint}
         </p>
       ) : null}
+    </div>
+  );
+}
+
+const STRENGTH_STYLES = [
+  { label: 'veryWeak', bar: 'bg-destructive' },
+  { label: 'weak', bar: 'bg-destructive' },
+  { label: 'fair', bar: 'bg-amber-500' },
+  { label: 'good', bar: 'bg-lime-500' },
+  { label: 'strong', bar: 'bg-emerald-500' },
+] as const;
+
+function PasswordStrengthMeter({ score }: { score: 0 | 1 | 2 | 3 | 4 | null }) {
+  const t = useTranslations('auth.strength');
+
+  if (score === null) return null;
+
+  const { label, bar } = STRENGTH_STYLES[score];
+
+  return (
+    <div className="-mt-2 flex flex-col gap-1">
+      <div className="flex gap-1">
+        {STRENGTH_STYLES.map((_, index) => (
+          <div
+            key={index}
+            className={cn('h-1 flex-1 rounded-full bg-muted', index <= score && bar)}
+          />
+        ))}
+      </div>
+      <p className="text-xs text-muted-foreground">{t(label)}</p>
     </div>
   );
 }

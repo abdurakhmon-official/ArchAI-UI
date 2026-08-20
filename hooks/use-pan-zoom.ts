@@ -14,7 +14,23 @@ interface Transform {
 
 const IDENTITY: Transform = { scale: 1, x: 0, y: 0 };
 
-export function usePanZoom() {
+const clamp = (value: number, min: number, max: number): number => {
+  return Math.min(max, Math.max(min, value));
+};
+
+const distanceBetween = (a: { x: number; y: number }, b: { x: number; y: number }): number => {
+  return Math.hypot(a.x - b.x, a.y - b.y);
+};
+
+const halfWidth = (ref: React.RefObject<HTMLDivElement | null>): number => {
+  return (ref.current?.clientWidth ?? 0) / 2;
+};
+
+const halfHeight = (ref: React.RefObject<HTMLDivElement | null>): number => {
+  return (ref.current?.clientHeight ?? 0) / 2;
+};
+
+const usePanZoom = () => {
   const [transform, setTransform] = useState<Transform>(IDENTITY);
   const containerRef = useRef<HTMLDivElement>(null);
 
@@ -140,20 +156,6 @@ export function usePanZoom() {
       onPointerCancel: onPointerUp,
     },
   };
-}
+};
 
-function clamp(value: number, min: number, max: number): number {
-  return Math.min(max, Math.max(min, value));
-}
-
-function distanceBetween(a: { x: number; y: number }, b: { x: number; y: number }): number {
-  return Math.hypot(a.x - b.x, a.y - b.y);
-}
-
-function halfWidth(ref: React.RefObject<HTMLDivElement | null>): number {
-  return (ref.current?.clientWidth ?? 0) / 2;
-}
-
-function halfHeight(ref: React.RefObject<HTMLDivElement | null>): number {
-  return (ref.current?.clientHeight ?? 0) / 2;
-}
+export { usePanZoom };

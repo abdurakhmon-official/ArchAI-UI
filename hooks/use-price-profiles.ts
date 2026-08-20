@@ -6,21 +6,21 @@ import type { EstimateSelection } from '@/types/domain';
 
 const KEY = ['price-profiles'] as const;
 
-export function usePriceProfiles(enabled = true) {
+const usePriceProfiles = (enabled = true) => {
   return useQuery({
     queryKey: KEY,
     queryFn: priceProfileService.list,
     enabled,
     staleTime: 60_000,
   });
-}
+};
 
-function useInvalidate() {
+const useInvalidate = () => {
   const queryClient = useQueryClient();
   return () => queryClient.invalidateQueries({ queryKey: KEY });
-}
+};
 
-export function useSavePriceProfile() {
+const useSavePriceProfile = () => {
   const invalidate = useInvalidate();
 
   return useMutation({
@@ -34,13 +34,15 @@ export function useSavePriceProfile() {
     }) => (id ? priceProfileService.update(id, input) : priceProfileService.create(input)),
     onSuccess: invalidate,
   });
-}
+};
 
-export function useDeletePriceProfile() {
+const useDeletePriceProfile = () => {
   const invalidate = useInvalidate();
 
   return useMutation({
     mutationFn: (id: string) => priceProfileService.remove(id),
     onSuccess: invalidate,
   });
-}
+};
+
+export { usePriceProfiles, useSavePriceProfile, useDeletePriceProfile };

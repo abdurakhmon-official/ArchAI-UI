@@ -73,7 +73,7 @@ export function ConstructorForm({ initial }: Props) {
 
     startTransition(() => {
       router.push({
-        pathname: '/konstruktor/natijalar',
+        pathname: '/constructor/results',
         query: Object.fromEntries(toSearchParams(params)),
       });
     });
@@ -165,7 +165,7 @@ export function ConstructorForm({ initial }: Props) {
                   key={type.code}
                   label={translated(type.name, locale) || type.code}
                   value={params.rooms[type.code] ?? 0}
-                  max={type.max_count}
+                  max={type.maxCount}
                   onChange={(value) => setRoom(type.code, value)}
                 />
               ))

@@ -61,7 +61,7 @@ export function VerifyEmail({ token }: { token: string }) {
           uchun foydalanuvchi kim ekanini bilish kerak, u esa
           kirmagan bo'lishi mumkin.
         */}
-        <ButtonLink variant="outline" size="sm" href="/kabinet/profil">
+        <ButtonLink variant="outline" size="sm" href="/dashboard/profile">
           {t('goToProfile')}
         </ButtonLink>
       </div>
@@ -75,7 +75,7 @@ export function VerifyEmail({ token }: { token: string }) {
         <p className="font-medium">{t('doneTitle')}</p>
         <p className="mt-1 text-sm text-muted-foreground">{t('doneBody')}</p>
       </div>
-      <ButtonLink size="sm" href="/kabinet">
+      <ButtonLink size="sm" href="/dashboard">
         {t('goToCabinet')}
       </ButtonLink>
     </div>

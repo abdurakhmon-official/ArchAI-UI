@@ -91,9 +91,9 @@ export function BlogEditor() {
       title: draft.title ?? (source.title as Record<string, string>) ?? {},
       excerpt: draft.excerpt ?? (source.excerpt as Record<string, string>) ?? {},
       body: draft.body ?? asTranslated(source.body),
-      cover_url: draft.cover_url !== undefined ? draft.cover_url : source.cover_url,
-      category_id:
-        draft.category_id !== undefined ? draft.category_id : (source.category_id ?? null),
+      coverUrl: draft.coverUrl !== undefined ? draft.coverUrl : source.coverUrl,
+      categoryId:
+        draft.categoryId !== undefined ? draft.categoryId : (source.categoryId ?? null),
       status: (draft.status ?? source.status) as PostDraft['status'],
     };
   }, [detail.data, draft]);
@@ -137,8 +137,8 @@ export function BlogEditor() {
         */
         ...(post.excerpt?.uz?.trim() ? { excerpt: post.excerpt } : {}),
         body: post.body,
-        cover_url: post.cover_url,
-        category_id: post.category_id,
+        coverUrl: post.coverUrl,
+        categoryId: post.categoryId,
         status: post.status,
       });
 
@@ -237,7 +237,7 @@ export function BlogEditor() {
                   <span className="flex items-center gap-2 text-xs text-muted-foreground">
                     {t(`statuses.${row.status}` as never)}
                     <span>·</span>
-                    {formatDate(row.published_at ?? row.created_at, locale)}
+                    {formatDate(row.publishedAt ?? row.createdAt, locale)}
                   </span>
                 </button>
               </li>
@@ -298,8 +298,8 @@ export function BlogEditor() {
             <Field label={t('category')}>
               <select
                 aria-label={t('category')}
-                value={post.category_id ?? ''}
-                onChange={(event) => change({ category_id: event.target.value || null })}
+                value={post.categoryId ?? ''}
+                onChange={(event) => change({ categoryId: event.target.value || null })}
                 className="h-9 w-full min-w-0 rounded-lg border bg-background px-2 text-sm"
               >
                 <option value="">{t('noCategory')}</option>
@@ -329,8 +329,8 @@ export function BlogEditor() {
               folder="blog"
               label={t('cover')}
               hint={t('coverHint')}
-              value={post.cover_url}
-              onChange={(cover_url) => change({ cover_url })}
+              value={post.coverUrl}
+              onChange={(coverUrl) => change({ coverUrl })}
             />
           </div>
 

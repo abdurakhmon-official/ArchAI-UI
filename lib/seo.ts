@@ -8,13 +8,6 @@ export const SITE_URL = (
 
 type Route = Parameters<typeof getPathname>[0]['href'];
 
-
-export function localeUrls(href: Route): Record<string, string> {
-  return Object.fromEntries(
-    routing.locales.map((locale) => [locale, SITE_URL + getPathname({ href, locale })]),
-  );
-}
-
 export interface PageSeo {
   locale: string;
   href: Route;
@@ -22,7 +15,13 @@ export interface PageSeo {
   description?: string;
 }
 
-export function pageMetadata({ locale, href, title, description }: PageSeo): Metadata {
+const localeUrls = (href: Route): Record<string, string> => {
+  return Object.fromEntries(
+    routing.locales.map((locale) => [locale, SITE_URL + getPathname({ href, locale })]),
+  );
+};
+
+const pageMetadata = ({ locale, href, title, description }: PageSeo): Metadata => {
   const urls = localeUrls(href);
 
   return {
@@ -44,4 +43,6 @@ export function pageMetadata({ locale, href, title, description }: PageSeo): Met
       type: 'website',
     },
   };
-}
+};
+
+export { localeUrls, pageMetadata };

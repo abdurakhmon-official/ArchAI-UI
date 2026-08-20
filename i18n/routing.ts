@@ -7,85 +7,86 @@ export const routing = defineRouting({
 
   pathnames: {
     '/': '/',
-    '/konstruktor': {
+    '/constructor': {
       uz: '/konstruktor',
       ru: '/konstruktor',
       en: '/constructor',
     },
-    '/konstruktor/natijalar': {
+    '/constructor/results': {
       uz: '/konstruktor/natijalar',
       ru: '/konstruktor/rezultaty',
       en: '/constructor/results',
     },
-    '/uslublar': { uz: '/uslublar', ru: '/stili', en: '/styles' },
-    '/uslublar/[slug]': {
+    '/styles': { uz: '/uslublar', ru: '/stili', en: '/styles' },
+    '/styles/[slug]': {
       uz: '/uslublar/[slug]',
       ru: '/stili/[slug]',
       en: '/styles/[slug]',
     },
-    '/narxlash': { uz: '/narxlash', ru: '/tarify', en: '/pricing' },
+    '/pricing': { uz: '/narxlash', ru: '/tarify', en: '/pricing' },
     '/blog': '/blog',
     '/blog/[slug]': '/blog/[slug]',
-    '/yordam': { uz: '/yordam', ru: '/pomoshch', en: '/help' },
-    '/biz-haqimizda': { uz: '/biz-haqimizda', ru: '/o-nas', en: '/about' },
-    '/kirish': { uz: '/kirish', ru: '/vhod', en: '/sign-in' },
-    '/royxatdan-otish': {
+    '/help': { uz: '/yordam', ru: '/pomoshch', en: '/help' },
+    '/about': { uz: '/biz-haqimizda', ru: '/o-nas', en: '/about' },
+    '/sign-in': { uz: '/kirish', ru: '/vhod', en: '/sign-in' },
+    '/sign-up': {
       uz: '/royxatdan-otish',
       ru: '/registratsiya',
       en: '/sign-up',
     },
 
-    '/parolni-unutdim': {
+    '/forgot-password': {
       uz: '/parolni-unutdim',
       ru: '/zabyl-parol',
       en: '/forgot-password',
     },
-    '/parol-tiklash/[token]': {
+    '/reset-password/[token]': {
       uz: '/parol-tiklash/[token]',
       ru: '/sbros-parolya/[token]',
       en: '/reset-password/[token]',
     },
-    '/email-tasdiqlash/[token]': {
+    '/verify-email/[token]': {
       uz: '/email-tasdiqlash/[token]',
       ru: '/podtverzhdenie-email/[token]',
       en: '/verify-email/[token]',
     },
-    '/ulashilgan/[token]': {
+    '/shared/[token]': {
       uz: '/ulashilgan/[token]',
       ru: '/obshchiy/[token]',
       en: '/shared/[token]',
     },
-    '/kabinet': { uz: '/kabinet', ru: '/kabinet', en: '/dashboard' },
-    '/kabinet/profil': {
+    '/dashboard': { uz: '/kabinet', ru: '/kabinet', en: '/dashboard' },
+    '/dashboard/profile': {
       uz: '/kabinet/profil',
       ru: '/kabinet/profil',
       en: '/dashboard/profile',
     },
-    '/kabinet/obuna': {
+    '/dashboard/subscription': {
       uz: '/kabinet/obuna',
       ru: '/kabinet/podpiska',
       en: '/dashboard/subscription',
     },
-    '/loyiha/[id]': {
+    '/project/[id]': {
       uz: '/loyiha/[id]',
       ru: '/proekt/[id]',
       en: '/project/[id]',
     },
 
     '/admin': '/admin',
-    '/admin/narxlar': '/admin/narxlar',
-    '/admin/xona-turlari': '/admin/xona-turlari',
-    '/admin/uslublar': '/admin/uslublar',
-    '/admin/tom-uslublari': '/admin/tom-uslublari',
+    '/admin/prices': '/admin/prices',
+    '/admin/room-types': '/admin/room-types',
+    '/admin/styles': '/admin/styles',
+    '/admin/roof-styles': '/admin/roof-styles',
     '/admin/blog': '/admin/blog',
-    '/admin/savollar': '/admin/savollar',
-    '/admin/murojaatlar': '/admin/murojaatlar',
-    '/admin/loyihalar': '/admin/loyihalar',
+    '/admin/faq': '/admin/faq',
+    '/admin/leads': '/admin/leads',
+    '/admin/projects': '/admin/projects',
     '/admin/media': '/admin/media',
-    '/admin/andozalar': '/admin/andozalar',
-    '/admin/tariflar': '/admin/tariflar',
-    '/admin/foydalanuvchilar': '/admin/foydalanuvchilar',
-    '/admin/jurnal': '/admin/jurnal',
+    '/admin/skeletons': '/admin/skeletons',
+    '/admin/plans': '/admin/plans',
+    '/admin/payout-cards': '/admin/payout-cards',
+    '/admin/users': '/admin/users',
+    '/admin/audit': '/admin/audit',
   },
 });
 

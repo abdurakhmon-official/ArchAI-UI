@@ -46,7 +46,7 @@ export function SharedProjectView({ token }: { token: string }) {
       <div className="rounded-xl border border-dashed px-6 py-16 text-center">
         <p className="font-medium">{detail.status === 404 ? t('notFound') : detail.message}</p>
         <p className="mt-1 text-sm text-muted-foreground">{t('notFoundHint')}</p>
-        <ButtonLink size="sm" href="/konstruktor" className="mt-4">
+        <ButtonLink size="sm" href="/constructor" className="mt-4">
           {t('createOwn')}
         </ButtonLink>
       </div>
@@ -60,7 +60,7 @@ export function SharedProjectView({ token }: { token: string }) {
       <header>
         <h1 className="text-2xl font-semibold tracking-tight">{data.title}</h1>
         <p className="mt-1 text-sm text-muted-foreground">
-          {formatDate(data.created_at, locale)}
+          {formatDate(data.createdAt, locale)}
           {data.style ? ` · ${translated(data.style.name, locale)}` : ''}
         </p>
       </header>
@@ -78,7 +78,7 @@ export function SharedProjectView({ token }: { token: string }) {
         />
         <Fact label={t('rooms')} value={String(data.estimate?.measurements.ROOM_COUNT ?? '—')} />
         <Fact label={t('floors')} value={String(house?.floors.length ?? '—')} />
-        <Fact label={t('total')} value={formatSumShort(data.estimate_total, locale)} />
+        <Fact label={t('total')} value={formatSumShort(data.estimateTotal, locale)} />
       </dl>
 
       {data.note ? (
@@ -91,7 +91,7 @@ export function SharedProjectView({ token }: { token: string }) {
       */}
       <div className="flex flex-col items-center gap-2 rounded-xl border border-dashed px-6 py-8 text-center">
         <p className="text-sm text-muted-foreground">{t('cta')}</p>
-        <ButtonLink size="sm" href="/konstruktor">
+        <ButtonLink size="sm" href="/constructor">
           {t('createOwn')}
         </ButtonLink>
       </div>

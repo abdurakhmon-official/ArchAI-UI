@@ -11,9 +11,9 @@ export const RoomCountsSchema = z.record(
 
 export interface RoomTypeLimit {
   code: string;
-  min_area: number;
-  max_count: number;
-  default_count: number;
+  minArea: number;
+  maxCount: number;
+  defaultCount: number;
 }
 
 export const ParamsSchema = z.object({
@@ -67,10 +67,10 @@ export type ParamIssue = {
   values?: Record<string, string | number>;
 };
 
-export function validateParams(
+const validateParams = (
   params: ConstructorParams,
   types: RoomTypeLimit[] = [],
-): ParamIssue[] {
+): ParamIssue[] => {
   const issues: ParamIssue[] = [];
 
   const parsed = ParamsSchema.safeParse(params);
@@ -85,8 +85,8 @@ export function validateParams(
 
   for (const type of types) {
     const count = params.rooms[type.code] ?? 0;
-    if (count > type.max_count) {
-      issues.push({ field: 'rooms', code: 'ROOM_MAX_COUNT', values: { max: type.max_count } });
+    if (count > type.maxCount) {
+      issues.push({ field: 'rooms', code: 'ROOM_MAX_COUNT', values: { max: type.maxCount } });
     }
   }
 
@@ -114,21 +114,21 @@ export function validateParams(
   }
 
   return issues;
-}
+};
 
-export function footprintShare(params: ConstructorParams): number {
+const footprintShare = (params: ConstructorParams): number => {
   const land = params.landAreaSotix * 100;
   return land > 0 ? (params.width * params.length) / land : Infinity;
-}
+};
 
-export function totalRooms(params: ConstructorParams): number {
+const totalRooms = (params: ConstructorParams): number => {
   return Object.values(params.rooms).reduce((sum, count) => sum + count, 0);
-}
+};
 
-function minimumArea(params: ConstructorParams, types: RoomTypeLimit[]): number {
+const minimumArea = (params: ConstructorParams, types: RoomTypeLimit[]): number => {
   if (types.length === 0) return 0;
 
-  const byCode = new Map(types.map((type) => [type.code, type.min_area]));
+  const byCode = new Map(types.map((type) => [type.code, type.minArea]));
 
   let rooms = 0;
   for (const [code, count] of Object.entries(params.rooms)) {
@@ -138,7 +138,7 @@ function minimumArea(params: ConstructorParams, types: RoomTypeLimit[]): number 
   const kitchen = params.kitchen === 'separate' ? (byCode.get('kitchen') ?? 8) : 0;
 
   return (rooms + kitchen) * 1.25;
-}
+};
 
 const LEGACY_ROOM_KEYS: Record<string, string> = {
   yotoq: 'bedroom',
@@ -148,7 +148,7 @@ const LEGACY_ROOM_KEYS: Record<string, string> = {
   ovqat: 'dining',
 };
 
-export function toSearchParams(params: ConstructorParams): URLSearchParams {
+const toSearchParams = (params: ConstructorParams): URLSearchParams => {
   const search = new URLSearchParams({
     yer: String(params.landAreaSotix),
     eni: String(params.width),
@@ -170,9 +170,9 @@ export function toSearchParams(params: ConstructorParams): URLSearchParams {
   if (params.northSide) search.set('shimol', params.northSide);
 
   return search;
-}
+};
 
-export function fromSearchParams(search: URLSearchParams): ConstructorParams {
+const fromSearchParams = (search: URLSearchParams): ConstructorParams => {
   const number = (key: string, fallback: number) => {
     const value = Number(search.get(key));
     return Number.isFinite(value) && value > 0 ? value : fallback;
@@ -202,9 +202,9 @@ export function fromSearchParams(search: URLSearchParams): ConstructorParams {
     variants: number('variant', DEFAULT_PARAMS.variants),
     finishLevel: search.get('pardoz') || DEFAULT_PARAMS.finishLevel,
   };
-}
+};
 
-function roomsFrom(search: URLSearchParams): Record<string, number> {
+const roomsFrom = (search: URLSearchParams): Record<string, number> => {
   const rooms: Record<string, number> = {};
 
   for (const pair of (search.get('xona') ?? '').split(',')) {
@@ -225,15 +225,15 @@ function roomsFrom(search: URLSearchParams): Record<string, number> {
   }
 
   return rooms;
-}
+};
 
-function intOrZero(raw: string | null, fallback: number): number {
+const intOrZero = (raw: string | null, fallback: number): number => {
   if (raw === null) return fallback;
   const value = Number(raw);
   return Number.isInteger(value) && value >= 0 ? value : fallback;
-}
+};
 
-export function toGenerateParams(params: ConstructorParams): GenerateParams {
+const toGenerateParams = (params: ConstructorParams): GenerateParams => {
   return {
     landAreaSotix: params.landAreaSotix,
     width: params.width,
@@ -248,4 +248,13 @@ export function toGenerateParams(params: ConstructorParams): GenerateParams {
     variants: params.variants,
     finishLevel: params.finishLevel,
   };
-}
+};
+
+export {
+  validateParams,
+  footprintShare,
+  totalRooms,
+  toSearchParams,
+  fromSearchParams,
+  toGenerateParams,
+};

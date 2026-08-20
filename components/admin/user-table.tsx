@@ -14,10 +14,10 @@ import {
   TableRow,
   TableWrap,
 } from '@/components/ui/table';
-import { useAdminUsers, useSetUserRole } from '@/hooks/use-admin-data';
+import { useAdminPlans, useAdminUsers, useSetUserPlan, useSetUserRole } from '@/hooks/use-admin-data';
 import { useSession } from '@/hooks/use-auth';
 import { errorFrom } from '@/lib/errors';
-import { formatDate } from '@/lib/formatters';
+import { formatDate, translated } from '@/lib/formatters';
 import { cn } from '@/lib/utils';
 import type { AdminUser } from '@/lib/services';
 
@@ -28,9 +28,11 @@ import type { AdminUser } from '@/lib/services';
  * chaqiradigan ekran yo'q edi — ya'ni admin ro'yxatni umuman ko'ra
  * olmasdi.
  *
- * Bu yerdagi yagona yozish amali — rolni o'zgartirish, va u eng xavfli
- * amal: ADMIN roli hamma cheklovni chetlab o'tadi. Shu sababli u
- * tasdiqlash bilan qo'yilgan va jurnalga tushadi.
+ * Ikkita yozish amali bor. Rol o'zgartirish — ADMIN darajasi hamma
+ * cheklovni chetlab o'tadi, shuning uchun tasdiqlash bilan qo'yilgan.
+ * Tarif o'zgartirish — pul bilan bog'liq imtiyoz, shuning uchun rol
+ * kabi bir bosishda emas: admin o'z parolini qayta kiritishi shart va
+ * amal `O'zgarishlar jurnali`ga tushadi.
  */
 
 const ROLES: AdminUser['role'][] = ['USER', 'ARCHITECT', 'ADMIN'];
@@ -46,10 +48,14 @@ export function UserTable() {
   const [query, setQuery] = useState('');
   const [page, setPage] = useState(1);
   const [confirming, setConfirming] = useState<{ id: string; role: AdminUser['role'] } | null>(null);
+  const [confirmingPlan, setConfirmingPlan] = useState<{ id: string; planCode: string } | null>(null);
+  const [planPassword, setPlanPassword] = useState('');
   const [failure, setFailure] = useState<string | null>(null);
 
   const users = useAdminUsers({ page, ...(query ? { search: query } : {}) });
+  const plans = useAdminPlans();
   const setRole = useSetUserRole();
+  const setPlan = useSetUserPlan();
 
   const submit = (event: React.FormEvent) => {
     event.preventDefault();
@@ -65,6 +71,19 @@ export function UserTable() {
       setConfirming(null);
     } catch (error) {
       setFailure(errorFrom(error).message);
+    }
+  };
+
+  const applyPlan = async (id: string, planCode: string, password: string) => {
+    setFailure(null);
+
+    try {
+      await setPlan.mutateAsync({ id, planCode, password });
+      setConfirmingPlan(null);
+      setPlanPassword('');
+    } catch (error) {
+      setFailure(errorFrom(error).message);
+      setPlanPassword('');
     }
   };
 
@@ -117,6 +136,7 @@ export function UserTable() {
                   <TableHead className="text-start">{t('email')}</TableHead>
                   <TableHead className="text-start">{t('joined')}</TableHead>
                   <TableHead className="text-start">{t('role')}</TableHead>
+                  <TableHead className="text-start">{t('plan')}</TableHead>
                 </TableRow>
               </TableHeader>
 
@@ -124,6 +144,8 @@ export function UserTable() {
                 {rows.map((user) => {
                   const isSelf = user.id === session.user?.id;
                   const pending = confirming?.id === user.id;
+                  const pendingPlan = confirmingPlan?.id === user.id;
+                  const currentPlanCode = user.currentPlan?.code ?? 'free';
 
                   return (
                     <TableRow key={user.id} className={cn(!user.active && 'opacity-50')}>
@@ -138,13 +160,13 @@ export function UserTable() {
 
                       <TableCell className="text-muted-foreground">
                         {user.email}
-                        {!user.email_verified ? (
+                        {!user.emailVerified ? (
                           <span className="ms-2 text-xs text-destructive">{t('unverified')}</span>
                         ) : null}
                       </TableCell>
 
                       <TableCell className="whitespace-nowrap text-muted-foreground">
-                        {formatDate(user.created_at, locale)}
+                        {formatDate(user.createdAt, locale)}
                       </TableCell>
 
                       <TableCell>
@@ -209,6 +231,82 @@ export function UserTable() {
                               ) : null}
                               {t('confirm')}
                             </Button>
+                          </div>
+                        ) : null}
+                      </TableCell>
+
+                      <TableCell>
+                        <div className="flex flex-wrap items-center gap-1.5">
+                          {(plans.data ?? [])
+                            .filter((plan) => plan.active)
+                            .map((plan) => (
+                              <button
+                                key={plan.code}
+                                type="button"
+                                aria-pressed={currentPlanCode === plan.code}
+                                disabled={setPlan.isPending}
+                                onClick={() =>
+                                  currentPlanCode === plan.code
+                                    ? undefined
+                                    : (setConfirmingPlan({ id: user.id, planCode: plan.code }),
+                                      setPlanPassword(''))
+                                }
+                                className={cn(
+                                  'rounded-lg border px-2 py-1 text-xs transition-colors',
+                                  currentPlanCode === plan.code
+                                    ? 'border-primary bg-primary/10 text-primary'
+                                    : 'hover:border-foreground/30 hover:bg-muted',
+                                )}
+                              >
+                                {translated(plan.name, locale) || plan.code}
+                              </button>
+                            ))}
+                        </div>
+
+                        {/*
+                          Tarif — pul bilan bog'liq imtiyoz, shuning
+                          uchun rol kabi bir bosishda emas: admin o'z
+                          parolini qayta kiritishi shart.
+                        */}
+                        {pendingPlan ? (
+                          <div className="mt-2 flex flex-col gap-2 rounded-lg border border-destructive/40 bg-destructive/5 px-2.5 py-2">
+                            <span className="text-xs text-destructive">{t('planWarning')}</span>
+
+                            <Input
+                              type="password"
+                              autoComplete="current-password"
+                              value={planPassword}
+                              placeholder={t('passwordPlaceholder')}
+                              aria-label={t('passwordLabel')}
+                              onChange={(event) => setPlanPassword(event.target.value)}
+                              className="h-8 text-xs"
+                            />
+
+                            <div className="flex items-center gap-2">
+                              <Button
+                                size="sm"
+                                variant="ghost"
+                                onClick={() => {
+                                  setConfirmingPlan(null);
+                                  setPlanPassword('');
+                                }}
+                              >
+                                {t('cancel')}
+                              </Button>
+                              <Button
+                                size="sm"
+                                className="ms-auto"
+                                disabled={setPlan.isPending || !planPassword}
+                                onClick={() =>
+                                  applyPlan(user.id, confirmingPlan!.planCode, planPassword)
+                                }
+                              >
+                                {setPlan.isPending ? (
+                                  <Loader2 className="size-3.5 animate-spin" />
+                                ) : null}
+                                {t('confirm')}
+                              </Button>
+                            </div>
                           </div>
                         ) : null}
                       </TableCell>

@@ -61,7 +61,7 @@ export function ExportList() {
   const meta = exports.data?.meta;
 
   const expired = (row: ProjectExportRow) =>
-    Boolean(row.expires_at) && new Date(row.expires_at!) < new Date();
+    Boolean(row.expiresAt) && new Date(row.expiresAt!) < new Date();
 
   return (
     <section className="flex flex-col gap-4">
@@ -148,17 +148,17 @@ export function ExportList() {
                   </td>
 
                   <td className="px-3 py-2 text-end font-mono tabular-nums">
-                    {formatBytes(row.size_bytes, locale)}
+                    {formatBytes(row.sizeBytes, locale)}
                   </td>
 
                   <td className="px-3 py-2 text-muted-foreground">
-                    {formatDate(row.created_at, locale)}
+                    {formatDate(row.createdAt, locale)}
                   </td>
 
                   <td className="px-3 py-2 text-muted-foreground">
-                    {row.expires_at ? (
+                    {row.expiresAt ? (
                       <span className={cn(expired(row) && 'text-destructive')}>
-                        {expired(row) ? t('expiredAt') : formatDate(row.expires_at, locale)}
+                        {expired(row) ? t('expiredAt') : formatDate(row.expiresAt, locale)}
                       </span>
                     ) : (
                       '—'

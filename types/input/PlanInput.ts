@@ -12,8 +12,8 @@
         ru?: string | undefined;
         en?: string | undefined;
     } | undefined) | null;
-    price_uzs: number;
-    price_usd: number;
+    priceUzs: number;
+    priceUsd: number;
     limits: {
         projects: number;
         variants: number;

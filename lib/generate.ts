@@ -6,10 +6,10 @@ import type { GenerateParams, Style } from '@/types/domain';
 export function toStyleConfig(style: Style): StyleConfig {
   const roof = (style.roof ?? {}) as Record<string, unknown>;
   const interior = (style.interior ?? {}) as { ceilingHeight?: number };
-  const layout = (style.layout_rules ?? {}) as Record<string, unknown>;
+  const layout = (style.layoutRules ?? {}) as Record<string, unknown>;
   const window = (style.window ?? {}) as { wallAreaRatio?: number };
 
-  const preset = style.roof_style;
+  const preset = style.roofStyle;
 
   return {
     id: style.id,
@@ -19,8 +19,8 @@ export function toStyleConfig(style: Style): StyleConfig {
           type: preset.family,
           pitch: preset.pitch,
           overhang: preset.overhang,
-          ...(preset.upper_pitch !== null ? { upperPitch: preset.upper_pitch } : {}),
-          ...(preset.break_ratio !== null ? { breakRatio: preset.break_ratio } : {}),
+          ...(preset.upperPitch !== null ? { upperPitch: preset.upperPitch } : {}),
+          ...(preset.breakRatio !== null ? { breakRatio: preset.breakRatio } : {}),
         }
       : {
           type: (roof.type as StyleConfig['roof']['type']) ?? 'gable',

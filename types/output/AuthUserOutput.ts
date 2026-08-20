@@ -8,10 +8,10 @@
     phone: string | null;
     avatar: string | null;
     locale: string;
-    email_verified: boolean;
-    password_changed_at: Date | null;
+    emailVerified: boolean;
+    passwordChangedAt: Date | null;
     active: boolean;
-    created_at: Date;
-    updated_at: Date;
+    createdAt: Date;
+    updatedAt: Date;
     isAdmin: boolean;
 };

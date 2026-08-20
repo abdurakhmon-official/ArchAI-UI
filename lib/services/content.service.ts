@@ -11,8 +11,6 @@ import type {
   Translated,
 } from '@/types/domain';
 
-// --- Kontent ---------------------------------------------------------------
-
 export const contentService = {
   async posts(query: { page?: number; limit?: number; category?: string } = {}) {
     const { data } = await api.get<{
@@ -40,13 +38,6 @@ export const contentService = {
   },
 };
 
-/**
- * Blog, FAQ va murojaatlar — admin.
- *
- * Blog ro'yxati uchun alohida uch YO'Q: `/blog` admin tokeni bilan
- * chaqirilsa qoralamalarni ham qaytaradi (`OptionalAuth`). Shuning
- * uchun bu yerda faqat holat bo'yicha filtr qo'shiladi.
- */
 export const contentAdminService = {
   posts(query: { page?: number; limit?: number; search?: string; status?: string } = {}) {
     return api
@@ -81,7 +72,6 @@ export const contentAdminService = {
     return api.delete(`/blog/categories/${id}`);
   },
 
-  // --- FAQ ---
   createFaq(input: object) {
     return unwrap<FaqItem>(api.post('/faq', input));
   },
@@ -94,17 +84,10 @@ export const contentAdminService = {
     return api.delete(`/faq/${id}`);
   },
 
-  /**
-   * Tartibni yangilash.
-   *
-   * Tana obyekt: yuqori darajadagi massiv serverga umuman yetib
-   * bormaydi (`FaqReorderSchema` izohiga qarang).
-   */
   reorderFaq(items: Array<{ id: string; sort: number }>) {
     return api.put('/faq/reorder', { items });
   },
 
-  // --- Murojaatlar ---
   leads(query: { page?: number; status?: string } = {}) {
     return api
       .get<{
@@ -114,7 +97,7 @@ export const contentAdminService = {
       .then((response) => response.data);
   },
 
-  updateLead(id: string, input: { status?: string; admin_note?: string | null }) {
+  updateLead(id: string, input: { status?: string; adminNote?: string | null }) {
     return unwrap<Lead>(api.put(`/leads/${id}`, input));
   },
 

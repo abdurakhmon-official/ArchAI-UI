@@ -4,7 +4,7 @@
     page?: number;
     limit?: number;
     search?: string | undefined;
-    sortBy?: "updated_at" | "created_at" | "title";
+    sortBy?: "updatedAt" | "createdAt" | "title";
     order?: "asc" | "desc";
     deleted?: "exclude" | "include" | "only";
 };

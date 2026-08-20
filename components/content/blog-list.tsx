@@ -45,11 +45,11 @@ export function BlogList() {
         <Link key={post.id} href={{ pathname: '/blog/[slug]', params: { slug: post.slug } }}>
           <Card className="h-full overflow-hidden transition-shadow hover:shadow-md">
             <CardContent className="flex flex-col gap-3">
-              {post.cover_url ? (
+              {post.coverUrl ? (
                 <div className="relative aspect-16/9 overflow-hidden rounded-lg bg-muted/40">
                   {}
                   <Image
-                    src={post.cover_url}
+                    src={post.coverUrl}
                     alt={translated(post.title, locale)}
                     fill
                     sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
@@ -73,7 +73,7 @@ export function BlogList() {
               ) : null}
 
               <p className="mt-auto text-xs text-muted-foreground">
-                {post.published_at ? formatDate(post.published_at, locale) : null}
+                {post.publishedAt ? formatDate(post.publishedAt, locale) : null}
                 {post.author ? ` · ${post.author.fullName}` : ''}
               </p>
             </CardContent>

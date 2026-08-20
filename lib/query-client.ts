@@ -71,4 +71,5 @@ export const queryKeys = {
   faqAdmin: ['faq', 'admin'] as const,
   blogCategories: ['blog-categories'] as const,
   leads: ['leads'] as const,
+  adminPayoutCards: ['admin', 'payout-cards'] as const,
 };

@@ -21,7 +21,7 @@ import type { RoomType } from '@/types/domain';
 /**
  * Xona qoidalari o'zgarganda natijani darhol ko'rsatadi.
  *
- * Nima uchun kerak: `min_area` ni 9 dan 14 ga ko'tarish "shunchaki
+ * Nima uchun kerak: `minArea` ni 9 dan 14 ga ko'tarish "shunchaki
  * raqam" emas — u skeletga sig'maydigan xonani tug'diradi va generator
  * uni jimgina tashlab yuboradi. Admin buni faqat foydalanuvchi
  * shikoyat qilganda bilardi.
@@ -99,18 +99,18 @@ export function RoomTypePreview({ types, draft, className }: Props) {
 
       rules[row.code] = {
         code: row.code,
-        minArea: pick('min_area', row.min_area),
-        maxArea: pick('max_area', row.max_area),
-        idealRatio: row.ideal_ratio,
-        needsExteriorWall: row.needs_exterior_wall,
-        isWetZone: row.is_wet_zone,
-        accessFrom: row.access_from,
+        minArea: pick('minArea', row.minArea),
+        maxArea: pick('maxArea', row.maxArea),
+        idealRatio: row.idealRatio,
+        needsExteriorWall: row.needsExteriorWall,
+        isWetZone: row.isWetZone,
+        accessFrom: row.accessFrom,
       };
 
       names[row.code] = translated(row.name, locale) || row.code;
 
       const selectable = pick('selectable', row.selectable);
-      const count = pick('default_count', row.default_count);
+      const count = pick('defaultCount', row.defaultCount);
       if (selectable && count > 0) program[row.code] = count;
     }
 
@@ -166,7 +166,7 @@ export function RoomTypePreview({ types, draft, className }: Props) {
   /**
    * Xato darajasidagi tekshiruv topilmalari ham muvaffaqiyatsizlik.
    *
-   * Faqat xona soniga qarash yetarli emas edi: `min_area` ni oshirish
+   * Faqat xona soniga qarash yetarli emas edi: `minArea` ni oshirish
    * ko'pincha xonani yo'qotmaydi, balki uni qoidaga sig'maydigan qilib
    * qoldiradi — va yuqoridagi yashil "hammasi joylashdi" yozuvi shu
    * paytda yolg'on gapirardi.

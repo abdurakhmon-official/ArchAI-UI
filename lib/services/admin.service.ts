@@ -1,7 +1,6 @@
 import api from '@/lib/axios';
 import { unwrap } from '@/lib/services/unwrap';
-
-// --- Admin ------------------------------------------------------------------
+import type { Translated } from '@/types/domain';
 
 export interface AdminStats {
   users: number;
@@ -10,32 +9,23 @@ export interface AdminStats {
   newProjects: number;
   activeSubscriptions: number;
   openLeads: number;
-  /** Prisma `Decimal` — satr bo'lishi mumkin, `toNumber()` shart. */
   revenue30d: string | number;
 }
 
-/**
- * Admin uchlari.
- *
- * Hammasi `@Authorized(AdminOnly())` bilan himoyalangan; oddiy
- * foydalanuvchi 403 oladi va `lib/axios.ts` uni toast qiladi.
- */
 export const adminService = {
   stats() {
     return unwrap<AdminStats>(api.get('/dashboard/admin'));
   },
 };
 
-// --- Admin: jurnal -----------------------------------------------------
-
 export interface AuditEntry {
   id: string;
-  actor_id: string | null;
+  actorId: string | null;
   action: string;
   entity: string;
-  entity_id: string | null;
+  entityId: string | null;
   diff: Record<string, { from: unknown; to: unknown }> | null;
-  created_at: string;
+  createdAt: string;
   actor: { id: string; fullName: string; email: string } | null;
 }
 
@@ -54,8 +44,6 @@ export const auditService = {
   },
 };
 
-// --- Admin: foydalanuvchilar -----------------------------------------------
-
 export interface AdminUser {
   id: string;
   fullName: string;
@@ -63,18 +51,12 @@ export interface AdminUser {
   phone: string | null;
   role: 'ADMIN' | 'ARCHITECT' | 'USER';
   active: boolean;
-  email_verified: boolean;
-  created_at: string;
+  emailVerified: boolean;
+  createdAt: string;
+  currentPlan: { code: string; name: Translated } | null;
 }
 
 export const userAdminService = {
-  /**
-   * DIQQAT: bu uch boshqa o'ram ishlatadi — `{ data: { items, count } }`.
-   *
-   * Qolgan uchlar `{ data, meta }` beradi. Farq eski koddan qolgan va
-   * uni bu yerda tekislaymiz, chunki chaqiruvchi joyda ikki xil shakl
-   * bilan ishlash xatoga olib keladi.
-   */
   async list(query: { page?: number; search?: string; size?: number } = {}) {
     const { data } = await api.get<{ data: { items: AdminUser[]; count: number } }>(
       '/users/paginated',
@@ -86,6 +68,10 @@ export const userAdminService = {
 
   setRole(id: string, role: AdminUser['role']) {
     return unwrap<AdminUser>(api.put(`/users/${id}/role`, { role }));
+  },
+
+  setPlan(id: string, planCode: string, password: string) {
+    return unwrap<{ planCode: string }>(api.put(`/users/${id}/plan`, { planCode, password }));
   },
 
   remove(id: string) {

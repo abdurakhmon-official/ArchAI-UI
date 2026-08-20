@@ -148,7 +148,7 @@ function ProjectCard({ project }: { project: AdminProject }) {
   const restore = useAdminRestoreProject();
 
   const [failure, setFailure] = useState<string | null>(null);
-  const isDeleted = Boolean(project.deleted_at);
+  const isDeleted = Boolean(project.deletedAt);
 
   const act = async (run: () => Promise<unknown>) => {
     setFailure(null);
@@ -179,12 +179,12 @@ function ProjectCard({ project }: { project: AdminProject }) {
 
         {isDeleted ? (
           <span className="shrink-0 rounded bg-muted px-1.5 py-0.5 text-xs text-muted-foreground">
-            {t('deletedAt', { date: formatDate(project.deleted_at!, locale) })}
+            {t('deletedAt', { date: formatDate(project.deletedAt!, locale) })}
           </span>
         ) : null}
       </div>
 
-      {project.cover_svg ? <PlanCover svg={project.cover_svg} /> : null}
+      {project.coverSvg ? <PlanCover svg={project.coverSvg} /> : null}
 
       <dl className="flex items-end justify-between gap-2 text-sm">
         <div className="min-w-0">
@@ -196,12 +196,12 @@ function ProjectCard({ project }: { project: AdminProject }) {
 
         <div className="text-end">
           <dt className="text-xs text-muted-foreground">{t('sum')}</dt>
-          <dd className="tabular-nums">{formatSumShort(project.estimate_total, locale)}</dd>
+          <dd className="tabular-nums">{formatSumShort(project.estimateTotal, locale)}</dd>
         </div>
       </dl>
 
       <p className="text-xs text-muted-foreground">
-        {t('updated', { date: formatDate(project.updated_at, locale) })}
+        {t('updated', { date: formatDate(project.updatedAt, locale) })}
       </p>
 
       {failure ? <p className="text-xs text-destructive">{failure}</p> : null}
@@ -214,7 +214,7 @@ function ProjectCard({ project }: { project: AdminProject }) {
         */}
         {!isDeleted ? (
           <Link
-            href={{ pathname: '/loyiha/[id]', params: { id: project.id } }}
+            href={{ pathname: '/project/[id]', params: { id: project.id } }}
             className="flex items-center gap-1.5 text-sm text-primary hover:underline"
           >
             <ExternalLink className="size-3.5" />

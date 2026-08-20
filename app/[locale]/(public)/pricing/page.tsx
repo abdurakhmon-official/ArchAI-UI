@@ -2,19 +2,19 @@ import { getTranslations, setRequestLocale } from 'next-intl/server';
 import { PricingTable } from '@/components/billing/pricing-table';
 import { pageMetadata } from '@/lib/seo';
 
-export async function generateMetadata(props: PageProps<'/[locale]/narxlash'>) {
+export async function generateMetadata(props: PageProps<'/[locale]/pricing'>) {
   const { locale } = await props.params;
   const t = await getTranslations({ locale, namespace: 'pricing' });
 
   return pageMetadata({
     locale,
-    href: '/narxlash',
+    href: '/pricing',
     title: t('title'),
     description: t('subtitle'),
   });
 }
 
-export default async function PricingPage(props: PageProps<'/[locale]/narxlash'>) {
+export default async function PricingPage(props: PageProps<'/[locale]/pricing'>) {
   const { locale } = await props.params;
   setRequestLocale(locale);
 

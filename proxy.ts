@@ -35,7 +35,7 @@ export function proxy(request: NextRequest) {
 
   if (!token && PROTECTED.some((path) => withoutLocale.startsWith(path))) {
     const url = request.nextUrl.clone();
-    url.pathname = `/${localeOf(pathname)}${localized('/kirish', localeOf(pathname))}`;
+    url.pathname = `/${localeOf(pathname)}${localized('/sign-in', localeOf(pathname))}`;
     /*
       Kirgandan keyin qayerga qaytishni eslab qolamiz — QIDIRUV
       PARAMETRLARI bilan birga. Konstruktorda butun loyiha holati
@@ -64,12 +64,12 @@ export function proxy(request: NextRequest) {
       url.search = '';
 
       if (!token) {
-        url.pathname = `/${locale}${localized('/kirish', locale)}`;
+        url.pathname = `/${locale}${localized('/sign-in', locale)}`;
         url.searchParams.set('next', pathname);
       } else {
         // Kirgan, lekin admin emas — kirish sahifasiga yuborish
         // chalkash bo'lardi, chunki u allaqachon kirgan.
-        url.pathname = `/${locale}${localized('/kabinet', locale)}`;
+        url.pathname = `/${locale}${localized('/dashboard', locale)}`;
       }
 
       return NextResponse.redirect(url);
@@ -80,8 +80,8 @@ export function proxy(request: NextRequest) {
     const locale = localeOf(pathname);
     const url = request.nextUrl.clone();
     // Kabinet manzili ham tarjima qilingan (`en` da `/dashboard`) —
-    // qat'iy `/kabinet` yozilsa, inglizcha versiyada sahifa topilmaydi.
-    url.pathname = `/${locale}${localized('/kabinet', locale)}`;
+    // qat'iy `/dashboard` yozilsa, inglizcha versiyada sahifa topilmaydi.
+    url.pathname = `/${locale}${localized('/dashboard', locale)}`;
     url.search = '';
 
     return NextResponse.redirect(url);

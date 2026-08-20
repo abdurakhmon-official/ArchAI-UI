@@ -1,19 +1,19 @@
 import { getTranslations, setRequestLocale } from 'next-intl/server';
 import { pageMetadata } from '@/lib/seo';
 
-export async function generateMetadata(props: PageProps<'/[locale]/biz-haqimizda'>) {
+export async function generateMetadata(props: PageProps<'/[locale]/about'>) {
   const { locale } = await props.params;
   const t = await getTranslations({ locale, namespace: 'about' });
 
   return pageMetadata({
     locale,
-    href: '/biz-haqimizda',
+    href: '/about',
     title: t('title'),
     description: t('lead'),
   });
 }
 
-export default async function AboutPage(props: PageProps<'/[locale]/biz-haqimizda'>) {
+export default async function AboutPage(props: PageProps<'/[locale]/about'>) {
   const { locale } = await props.params;
   setRequestLocale(locale);
 

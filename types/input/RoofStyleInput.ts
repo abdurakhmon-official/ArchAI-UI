@@ -10,11 +10,11 @@
     family: "flat" | "shed" | "gable" | "hip" | "pyramid" | "mansard";
     pitch?: number;
     overhang?: number;
-    upper_pitch?: (number | undefined) | null;
-    break_ratio?: (number | undefined) | null;
-    covering_id?: (string | undefined) | null;
+    upperPitch?: (number | undefined) | null;
+    breakRatio?: (number | undefined) | null;
+    coveringId?: (string | undefined) | null;
     color?: (string | undefined) | null;
-    preview_url?: (string | undefined) | null;
+    previewUrl?: (string | undefined) | null;
     status?: unknown;
     sort?: number;
 };

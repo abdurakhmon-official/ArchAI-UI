@@ -42,9 +42,9 @@ export function StylesGrid() {
           <Card key={style.id} className="overflow-hidden">
             <CardContent className="flex flex-col gap-3">
               <div className="relative flex aspect-4/3 items-center justify-center overflow-hidden rounded-lg bg-muted/40">
-                {style.preview_url ? (
+                {style.previewUrl ? (
                   <Image
-                    src={style.preview_url}
+                    src={style.previewUrl}
                     alt={translated(style.name, locale)}
                     fill
                     sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
@@ -84,7 +84,7 @@ export function StylesGrid() {
               {}
               <ButtonLink
                 className="w-full"
-                href={{ pathname: '/konstruktor', query: { uslub: style.slug } }}
+                href={{ pathname: '/constructor', query: { uslub: style.slug } }}
               >
                 {t('use')}
               </ButtonLink>

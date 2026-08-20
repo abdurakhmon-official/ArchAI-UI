@@ -2,15 +2,15 @@ import { useTranslations } from 'next-intl';
 import { Brand } from '@/components/layout/brand';
 import { Link } from '@/i18n/navigation';
 
-type StaticPath = '/konstruktor' | '/uslublar' | '/narxlash' | '/blog' | '/yordam' | '/biz-haqimizda';
+type StaticPath = '/constructor' | '/styles' | '/pricing' | '/blog' | '/help' | '/about';
 
 const LINKS: Array<{ href: StaticPath; key: string }> = [
-  { href: '/konstruktor', key: 'constructor' },
-  { href: '/uslublar', key: 'styles' },
-  { href: '/narxlash', key: 'pricing' },
+  { href: '/constructor', key: 'constructor' },
+  { href: '/styles', key: 'styles' },
+  { href: '/pricing', key: 'pricing' },
   { href: '/blog', key: 'blog' },
-  { href: '/yordam', key: 'help' },
-  { href: '/biz-haqimizda', key: 'about' },
+  { href: '/help', key: 'help' },
+  { href: '/about', key: 'about' },
 ];
 
 export function Footer() {

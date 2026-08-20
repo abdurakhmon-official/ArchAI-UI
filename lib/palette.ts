@@ -10,6 +10,6 @@ export function appearanceOf(style: Style | null | undefined): StyleAppearance |
     facade: (style.facade ?? {}) as StyleAppearance['facade'],
     interior: (style.interior ?? {}) as StyleAppearance['interior'],
     window: (style.window ?? {}) as StyleAppearance['window'],
-    roofColor: style.roof_style?.color ?? roof.color ?? null,
+    roofColor: style.roofStyle?.color ?? roof.color ?? null,
   };
 }

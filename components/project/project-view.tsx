@@ -30,8 +30,8 @@ export function ProjectView({ id }: { id: string }) {
 
   const [syncedAt, setSyncedAt] = useState<string | null>(null);
 
-  if (project.data && syncedAt !== project.data.updated_at) {
-    setSyncedAt(project.data.updated_at);
+  if (project.data && syncedAt !== project.data.updatedAt) {
+    setSyncedAt(project.data.updatedAt);
     setGeometry(project.data.geometry);
     setDirty(false);
   }
@@ -58,7 +58,7 @@ export function ProjectView({ id }: { id: string }) {
         <div>
           <h1 className="text-2xl font-semibold tracking-tight">{data.title}</h1>
           <p className="text-sm text-muted-foreground">
-            {t('updatedAt', { date: formatDate(data.updated_at, locale) })}
+            {t('updatedAt', { date: formatDate(data.updatedAt, locale) })}
             {dirty ? ` · ${t('unsaved')}` : ''}
           </p>
         </div>
@@ -97,8 +97,8 @@ export function ProjectView({ id }: { id: string }) {
           names={roomTypes.names}
           style={style}
           estimate={data.estimate}
-          selection={data.estimate_selection}
-          finishLevel={data.finish_level}
+          selection={data.estimateSelection}
+          finishLevel={data.finishLevel}
           onSaveSelection={(selection) => saveSelection.mutate(selection)}
           savingSelection={saveSelection.isPending}
           onChange={(next) => {
@@ -126,7 +126,7 @@ function SaveFailure({ error, fallback }: { error: unknown; fallback: string }) 
   return (
     <div className="flex flex-wrap items-center justify-between gap-3 rounded-lg border border-dashed px-4 py-3">
       <p className="text-sm">{t('editLocked')}</p>
-      <ButtonLink size="sm" href="/narxlash">
+      <ButtonLink size="sm" href="/pricing">
         {t('upgrade')}
       </ButtonLink>
     </div>

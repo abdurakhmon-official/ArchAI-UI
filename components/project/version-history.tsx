@@ -82,9 +82,9 @@ export function VersionHistory({ projectId }: { projectId: string }) {
                 ) : null}
               </p>
               <p className="text-xs text-muted-foreground">
-                {formatDateTime(version.created_at, locale)}
-                {version.estimate_total
-                  ? ` · ${formatSumShort(version.estimate_total, locale)}`
+                {formatDateTime(version.createdAt, locale)}
+                {version.estimateTotal
+                  ? ` · ${formatSumShort(version.estimateTotal, locale)}`
                   : ''}
               </p>
             </div>

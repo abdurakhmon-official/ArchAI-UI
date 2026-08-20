@@ -37,9 +37,9 @@ type Draft = Partial<{
   family: string;
   pitch: number;
   overhang: number;
-  upper_pitch: number | null;
-  break_ratio: number | null;
-  covering_id: string | null;
+  upperPitch: number | null;
+  breakRatio: number | null;
+  coveringId: string | null;
   color: string | null;
   status: 'DRAFT' | 'PUBLISHED' | 'ARCHIVED';
 }>;
@@ -260,22 +260,22 @@ export function RoofStyleEditor() {
                 <Slider
                   label={t('upperPitch')}
                   hint={t('upperPitchHint')}
-                  value={preview.upper_pitch ?? Math.round(preview.pitch / 2.5)}
+                  value={preview.upperPitch ?? Math.round(preview.pitch / 2.5)}
                   min={0}
                   max={Math.max(preview.pitch - 1, 0)}
                   step={1}
                   unit="°"
-                  onChange={(upper_pitch) => change({ upper_pitch })}
+                  onChange={(upperPitch) => change({ upperPitch })}
                 />
 
                 <Slider
                   label={t('breakRatio')}
                   hint={t('breakRatioHint')}
-                  value={preview.break_ratio ?? 0.5}
+                  value={preview.breakRatio ?? 0.5}
                   min={0.15}
                   max={0.85}
                   step={0.05}
-                  onChange={(break_ratio) => change({ break_ratio })}
+                  onChange={(breakRatio) => change({ breakRatio })}
                 />
               </>
             ) : null}
@@ -284,13 +284,13 @@ export function RoofStyleEditor() {
               <div className="flex flex-wrap gap-1.5">
                 {coverings.map((option) => {
                   const id = coveringIds.get(option.code) ?? null;
-                  const active = (preview.covering_id ?? null) === id;
+                  const active = (preview.coveringId ?? null) === id;
 
                   return (
                     <button
                       key={option.code}
                       type="button"
-                      onClick={() => change({ covering_id: active ? null : id })}
+                      onClick={() => change({ coveringId: active ? null : id })}
                       className={cn(
                         'rounded-lg border px-2.5 py-1.5 text-sm transition-colors',
                         active

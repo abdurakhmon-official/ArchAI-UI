@@ -28,10 +28,10 @@ export function UserMenu() {
   if (!user) {
     return (
       <div className="hidden items-center gap-2 sm:flex">
-        <ButtonLink variant="ghost" size="sm" href="/kirish">
+        <ButtonLink variant="ghost" size="sm" href="/sign-in">
           {t('signIn')}
         </ButtonLink>
-        <ButtonLink size="sm" href="/royxatdan-otish">
+        <ButtonLink size="sm" href="/sign-up">
           {t('signUp')}
         </ButtonLink>
       </div>
@@ -86,18 +86,18 @@ export function UserMenu() {
 
         <DropdownMenuSeparator />
 
-        <DropdownMenuItem render={<Link href="/kabinet" className="cursor-pointer" />}>
+        <DropdownMenuItem render={<Link href="/dashboard" className="cursor-pointer" />}>
           <LayoutGrid className="mr-2 size-4" />
           {t('cabinet')}
         </DropdownMenuItem>
 
-        <DropdownMenuItem render={<Link href="/kabinet/profil" className="cursor-pointer" />}>
+        <DropdownMenuItem render={<Link href="/dashboard/profile" className="cursor-pointer" />}>
           <UserIcon className="mr-2 size-4" />
           {t('profile')}
         </DropdownMenuItem>
 
         {/* Obuna sahifasiga boshqa hech qayerdan yo'l yo'q. */}
-        <DropdownMenuItem render={<Link href="/kabinet/obuna" className="cursor-pointer" />}>
+        <DropdownMenuItem render={<Link href="/dashboard/subscription" className="cursor-pointer" />}>
           <CreditCard className="mr-2 size-4" />
           {t('subscription')}
         </DropdownMenuItem>

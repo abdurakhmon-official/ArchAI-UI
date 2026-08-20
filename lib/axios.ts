@@ -62,7 +62,7 @@ function redirectToSignIn(): void {
   const [, first] = window.location.pathname.split('/');
   const locale = routing.locales.includes(first as never) ? first : routing.defaultLocale;
 
-  const entry = routing.pathnames['/kirish'];
+  const entry = routing.pathnames['/sign-in'];
   const path = typeof entry === 'string' ? entry : (entry as Record<string, string>)[locale];
 
   const target = `/${locale}${path}`;

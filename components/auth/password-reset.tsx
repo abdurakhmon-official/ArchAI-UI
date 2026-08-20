@@ -43,7 +43,7 @@ export function ForgotPasswordForm() {
           <p className="font-medium">{t('sentTitle')}</p>
           <p className="mt-1 text-sm text-muted-foreground">{t('sentBody')}</p>
         </div>
-        <ButtonLink variant="outline" size="sm" href="/kirish">
+        <ButtonLink variant="outline" size="sm" href="/sign-in">
           {t('backToSignIn')}
         </ButtonLink>
       </div>
@@ -87,7 +87,7 @@ export function ForgotPasswordForm() {
       </Button>
 
       <p className="text-center text-sm text-muted-foreground">
-        <Link href="/kirish" className="text-primary hover:underline">
+        <Link href="/sign-in" className="text-primary hover:underline">
           {t('backToSignIn')}
         </Link>
       </p>
@@ -116,7 +116,7 @@ export function ResetPasswordForm({ token }: { token: string }) {
           */}
           <p className="mt-1 text-sm text-muted-foreground">{t('doneBody')}</p>
         </div>
-        <Button size="sm" onClick={() => router.push('/kirish')}>
+        <Button size="sm" onClick={() => router.push('/sign-in')}>
           {t('signInNow')}
         </Button>
       </div>
@@ -157,7 +157,7 @@ export function ResetPasswordForm({ token }: { token: string }) {
             xato. Foydalanuvchini boshi berk ko'chada qoldirmaslik
             uchun darhol yangisini so'rash yo'li ko'rsatiladi.
           */}
-          <Link href="/parolni-unutdim" className="mt-1 inline-block underline">
+          <Link href="/forgot-password" className="mt-1 inline-block underline">
             {t('requestAgain')}
           </Link>
         </div>

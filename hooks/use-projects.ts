@@ -5,21 +5,21 @@ import { queryKeys } from '@/lib/query-client';
 import { projectService } from '@/lib/services';
 import type { EstimateSelection, GenerateParams, GeometryState } from '@/types/domain';
 
-export function useProjects(query: { page?: number; search?: string } = {}) {
+const useProjects = (query: { page?: number; search?: string } = {}) => {
   return useQuery({
     queryKey: queryKeys.projects(query),
     queryFn: () => projectService.list(query),
     staleTime: 30_000,
   });
-}
+};
 
-export function useProject(id: string | null) {
+const useProject = (id: string | null) => {
   return useQuery({
     queryKey: queryKeys.project(id ?? ''),
     queryFn: () => projectService.byId(id!),
     enabled: Boolean(id),
   });
-}
+};
 
 export interface SaveProjectInput {
   title: string;
@@ -31,7 +31,7 @@ export interface SaveProjectInput {
   finishLevel?: string;
 }
 
-export function useCreateProject() {
+const useCreateProject = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
@@ -41,9 +41,9 @@ export function useCreateProject() {
       queryClient.setQueryData(queryKeys.project(project.id), project);
     },
   });
-}
+};
 
-export function useUpdateProject(id: string) {
+const useUpdateProject = (id: string) => {
   const queryClient = useQueryClient();
 
   return useMutation({
@@ -62,9 +62,9 @@ export function useUpdateProject(id: string) {
       queryClient.invalidateQueries({ queryKey: queryKeys.versions(id) });
     },
   });
-}
+};
 
-export function useSaveSelection(id: string) {
+const useSaveSelection = (id: string) => {
   const queryClient = useQueryClient();
 
   return useMutation({
@@ -74,26 +74,26 @@ export function useSaveSelection(id: string) {
       queryClient.invalidateQueries({ queryKey: ['projects'] });
     },
   });
-}
+};
 
-export function useDeleteProject() {
+const useDeleteProject = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
     mutationFn: (id: string) => projectService.remove(id),
     onSuccess: () => queryClient.invalidateQueries({ queryKey: ['projects'] }),
   });
-}
+};
 
-export function useProjectVersions(id: string | null) {
+const useProjectVersions = (id: string | null) => {
   return useQuery({
     queryKey: queryKeys.versions(id ?? ''),
     queryFn: () => projectService.versions(id!),
     enabled: Boolean(id),
   });
-}
+};
 
-export function useRestoreVersion(id: string) {
+const useRestoreVersion = (id: string) => {
   const queryClient = useQueryClient();
 
   return useMutation({
@@ -104,4 +104,15 @@ export function useRestoreVersion(id: string) {
       queryClient.invalidateQueries({ queryKey: ['projects'] });
     },
   });
-}
+};
+
+export {
+  useProjects,
+  useProject,
+  useCreateProject,
+  useUpdateProject,
+  useSaveSelection,
+  useDeleteProject,
+  useProjectVersions,
+  useRestoreVersion,
+};

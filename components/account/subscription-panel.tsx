@@ -57,17 +57,17 @@ export function SubscriptionPanel() {
                 </span>
               </div>
 
-              {subscription.period_end ? (
+              {subscription.periodEnd ? (
                 <p className="mt-1 text-sm text-muted-foreground">
-                  {subscription.auto_renew
-                    ? t('renewsOn', { date: formatDate(subscription.period_end, locale) })
-                    : t('endsOn', { date: formatDate(subscription.period_end, locale) })}
+                  {subscription.autoRenew
+                    ? t('renewsOn', { date: formatDate(subscription.periodEnd, locale) })
+                    : t('endsOn', { date: formatDate(subscription.periodEnd, locale) })}
                 </p>
               ) : null}
             </div>
 
             <div className="flex gap-2">
-              <ButtonLink variant="outline" size="sm" href="/narxlash">
+              <ButtonLink variant="outline" size="sm" href="/pricing">
                 {t('changePlan')}
               </ButtonLink>
 
@@ -96,7 +96,7 @@ export function SubscriptionPanel() {
               <p className="mt-1 text-sm text-muted-foreground">{t('freeHint')}</p>
             </div>
 
-            <ButtonLink size="sm" href="/narxlash">
+            <ButtonLink size="sm" href="/pricing">
               {t('upgrade')}
             </ButtonLink>
           </div>
@@ -126,7 +126,7 @@ export function SubscriptionPanel() {
                 {payments.map((payment) => (
                   <tr key={payment.id} className="border-b last:border-0">
                     <td className="px-3 py-2">
-                      {formatDate(payment.paid_at ?? payment.created_at, locale)}
+                      {formatDate(payment.paidAt ?? payment.createdAt, locale)}
                     </td>
                     <td className="px-3 py-2">{payment.provider}</td>
                     <td className="px-3 py-2">{t(`paymentStatuses.${payment.status}`)}</td>

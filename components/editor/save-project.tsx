@@ -42,7 +42,7 @@ export function SaveProject({ params, geometry, defaultTitle, styleSlug, skeleto
     })}`;
 
     return (
-      <ButtonLink variant="outline" size="sm" href={{ pathname: '/kirish', query: { next: here } }}>
+      <ButtonLink variant="outline" size="sm" href={{ pathname: '/sign-in', query: { next: here } }}>
         <LogIn className="size-4" />
         {t('signInToSave')}
       </ButtonLink>
@@ -72,7 +72,7 @@ export function SaveProject({ params, geometry, defaultTitle, styleSlug, skeleto
         skeletonId: skeletonId ?? null,
         finishLevel: params.finishLevel,
       },
-      { onSuccess: (project) => router.push({ pathname: '/loyiha/[id]', params: { id: project.id } }) },
+      { onSuccess: (project) => router.push({ pathname: '/project/[id]', params: { id: project.id } }) },
     );
   };
 

@@ -124,7 +124,7 @@ function LeadCard({ lead }: { lead: Lead }) {
   const [failure, setFailure] = useState<string | null>(null);
 
   // `null` — tegilmagan; shundagina "saqlash" tugmasi yashirin turadi.
-  const noteDirty = note !== null && note !== (lead.admin_note ?? '');
+  const noteDirty = note !== null && note !== (lead.adminNote ?? '');
 
   const setStatus = async (status: LeadStatus) => {
     setFailure(null);
@@ -140,7 +140,7 @@ function LeadCard({ lead }: { lead: Lead }) {
     setFailure(null);
 
     try {
-      await update.mutateAsync({ id: lead.id, admin_note: note || null });
+      await update.mutateAsync({ id: lead.id, adminNote: note || null });
       setNote(null);
     } catch (error) {
       setFailure(errorFrom(error).message);
@@ -157,7 +157,7 @@ function LeadCard({ lead }: { lead: Lead }) {
             <a href={`tel:${lead.phone}`} className="hover:underline">
               {lead.phone}
             </a>
-            {` · ${lead.source} · ${formatDate(lead.created_at, locale)}`}
+            {` · ${lead.source} · ${formatDate(lead.createdAt, locale)}`}
           </p>
         </div>
 
@@ -190,7 +190,7 @@ function LeadCard({ lead }: { lead: Lead }) {
 
       <div className="flex flex-col gap-1.5">
         <textarea
-          value={note ?? lead.admin_note ?? ''}
+          value={note ?? lead.adminNote ?? ''}
           rows={2}
           placeholder={t('notePlaceholder')}
           onChange={(event) => setNote(event.target.value)}

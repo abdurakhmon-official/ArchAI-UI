@@ -2,13 +2,6 @@ import api from '@/lib/axios';
 import { unwrap } from '@/lib/services/unwrap';
 import type { MediaFile, OrphanFile, ProjectExportRow } from '@/types/domain';
 
-/**
- * Media kutubxonasi — admin.
- *
- * Yetim fayl — bazadagi yozuvi bor, lekin hech qayerda ishlatilmayotgan
- * fayl: uslub muqovasi almashtirilgan, maqola o'chirilgan va hokazo.
- * Ular o'z-o'zidan yo'qolmaydi va vaqt o'tib saqlash joyini yeydi.
- */
 export const mediaService = {
   list(query: { page?: number; limit?: number; type?: string; search?: string } = {}) {
     return api
@@ -36,12 +29,6 @@ export const mediaService = {
   },
 };
 
-/**
- * Loyiha eksportlari — PDF va 3D rasmlar.
- *
- * Media kutubxonasidan alohida: bular kesh va muddati o'tgach o'zi
- * o'chadi. Bir ro'yxatga qo'shilsa "yetim fayl" hisobi buzilardi.
- */
 export const exportAdminService = {
   list(query: { page?: number; kind?: string; search?: string } = {}) {
     return api

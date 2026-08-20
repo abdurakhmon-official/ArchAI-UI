@@ -15,8 +15,8 @@
     body: {
         [x: string]: unknown;
     };
-    cover_url?: (string | undefined) | null;
-    category_id?: (string | undefined) | null;
+    coverUrl?: (string | undefined) | null;
+    categoryId?: (string | undefined) | null;
     status?: unknown;
-    published_at?: (Date | undefined) | null;
+    publishedAt?: (Date | undefined) | null;
 };

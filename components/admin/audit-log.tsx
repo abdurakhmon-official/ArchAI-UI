@@ -244,7 +244,7 @@ function Row({
     <>
       <TableRow>
         <TableCell className="whitespace-nowrap font-mono text-xs tabular-nums text-muted-foreground">
-          {formatDateTime(entry.created_at, locale)}
+          {formatDateTime(entry.createdAt, locale)}
         </TableCell>
 
         <TableCell>

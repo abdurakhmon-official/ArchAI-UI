@@ -40,7 +40,7 @@ export function ProjectList() {
             />
           </div>
 
-          <ButtonLink size="sm" href="/konstruktor" className="shrink-0">
+          <ButtonLink size="sm" href="/constructor" className="shrink-0">
             <Plus className="size-4" />
             {t('emptyCta')}
           </ButtonLink>
@@ -56,7 +56,7 @@ export function ProjectList() {
       ) : items.length === 0 ? (
         <div className="rounded-xl border border-dashed px-6 py-16 text-center">
           <p className="font-medium">{t('empty')}</p>
-          <ButtonLink size="sm" href="/konstruktor" className="mt-4">
+          <ButtonLink size="sm" href="/constructor" className="mt-4">
             <Plus className="size-4" />
             {t('emptyCta')}
           </ButtonLink>
@@ -70,7 +70,7 @@ export function ProjectList() {
                   <div className="min-w-0">
                     <p className="truncate font-medium">{project.title}</p>
                     <p className="text-xs text-muted-foreground">
-                      {t('updated')}: {formatDate(project.updated_at, locale)}
+                      {t('updated')}: {formatDate(project.updatedAt, locale)}
                     </p>
                   </div>
 
@@ -87,7 +87,7 @@ export function ProjectList() {
                   </Button>
                 </div>
 
-                {project.cover_svg ? <PlanCover svg={project.cover_svg} /> : null}
+                {project.coverSvg ? <PlanCover svg={project.coverSvg} /> : null}
 
                 {}
                 <dl className="flex items-center justify-between text-sm">
@@ -98,7 +98,7 @@ export function ProjectList() {
                   <div className="text-end">
                     <dt className="text-xs text-muted-foreground">{t('price')}</dt>
                     <dd className="font-mono tabular-nums">
-                      {formatSumShort(project.estimate_total, locale)}
+                      {formatSumShort(project.estimateTotal, locale)}
                     </dd>
                   </div>
                 </dl>
@@ -107,7 +107,7 @@ export function ProjectList() {
               <CardFooter>
                 <ButtonLink
                   className="w-full"
-                  href={{ pathname: '/loyiha/[id]', params: { id: project.id } }}
+                  href={{ pathname: '/project/[id]', params: { id: project.id } }}
                 >
                   {tp('openProject')}
                 </ButtonLink>

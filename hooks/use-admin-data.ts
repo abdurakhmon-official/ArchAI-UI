@@ -5,48 +5,48 @@ import { queryKeys } from '@/lib/query-client';
 import { auditService, planAdminService, userAdminService } from '@/lib/services';
 import type { AdminUser } from '@/lib/services';
 
-export function useAuditLog(query: { page?: number; entity?: string; action?: string } = {}) {
+const useAuditLog = (query: { page?: number; entity?: string; action?: string } = {}) => {
   return useQuery({
     queryKey: queryKeys.audit(query),
     queryFn: () => auditService.list(query),
     staleTime: 10_000,
   });
-}
+};
 
-export function useAuditFacets() {
+const useAuditFacets = () => {
   return useQuery({
     queryKey: queryKeys.auditFacets,
     queryFn: auditService.facets,
     staleTime: 5 * 60_000,
   });
-}
+};
 
-export function useAdminPlans() {
+const useAdminPlans = () => {
   return useQuery({
     queryKey: queryKeys.adminPlans,
     queryFn: planAdminService.list,
     staleTime: 30_000,
   });
-}
+};
 
-export function useSubscriptions(page = 1) {
+const useSubscriptions = (page = 1) => {
   return useQuery({
     queryKey: queryKeys.subscriptionsPage(page),
     queryFn: () => planAdminService.subscriptions(page),
     staleTime: 30_000,
   });
-}
+};
 
-function useInvalidatePlans() {
+const useInvalidatePlans = () => {
   const queryClient = useQueryClient();
 
   return () => {
     queryClient.invalidateQueries({ queryKey: queryKeys.adminPlans });
     queryClient.invalidateQueries({ queryKey: queryKeys.plans });
   };
-}
+};
 
-export function useUpdatePlan() {
+const useUpdatePlan = () => {
   const invalidate = useInvalidatePlans();
 
   return useMutation({
@@ -54,26 +54,26 @@ export function useUpdatePlan() {
       planAdminService.update(id, input),
     onSuccess: invalidate,
   });
-}
+};
 
-export function useDeactivatePlan() {
+const useDeactivatePlan = () => {
   const invalidate = useInvalidatePlans();
 
   return useMutation({
     mutationFn: (id: string) => planAdminService.deactivate(id),
     onSuccess: invalidate,
   });
-}
+};
 
-export function useAdminUsers(query: { page?: number; search?: string } = {}) {
+const useAdminUsers = (query: { page?: number; search?: string } = {}) => {
   return useQuery({
     queryKey: queryKeys.adminUsers(query),
     queryFn: () => userAdminService.list(query),
     staleTime: 30_000,
   });
-}
+};
 
-export function useSetUserRole() {
+const useSetUserRole = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
@@ -84,4 +84,29 @@ export function useSetUserRole() {
       queryClient.invalidateQueries({ queryKey: ['admin', 'audit'] });
     },
   });
-}
+};
+
+const useSetUserPlan = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: ({ id, planCode, password }: { id: string; planCode: string; password: string }) =>
+      userAdminService.setPlan(id, planCode, password),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['admin', 'users'] });
+      queryClient.invalidateQueries({ queryKey: ['admin', 'audit'] });
+    },
+  });
+};
+
+export {
+  useAuditLog,
+  useAuditFacets,
+  useAdminPlans,
+  useSubscriptions,
+  useUpdatePlan,
+  useDeactivatePlan,
+  useAdminUsers,
+  useSetUserRole,
+  useSetUserPlan,
+};

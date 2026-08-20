@@ -4,15 +4,15 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { queryKeys } from '@/lib/query-client';
 import { catalogService, roomTypeAdminService } from '@/lib/services';
 
-export function useAllRoomTypes() {
+const useAllRoomTypes = () => {
   return useQuery({
     queryKey: queryKeys.roomTypes,
     queryFn: catalogService.roomTypes,
     staleTime: 30_000,
   });
-}
+};
 
-export function useUpdateRoomType() {
+const useUpdateRoomType = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
@@ -21,10 +21,10 @@ export function useUpdateRoomType() {
       ...input
     }: {
       id: string;
-      min_area?: number;
-      max_area?: number;
-      max_count?: number;
-      default_count?: number;
+      minArea?: number;
+      maxArea?: number;
+      maxCount?: number;
+      defaultCount?: number;
       selectable?: boolean;
       sort?: number;
     }) => roomTypeAdminService.update(id, input),
@@ -34,4 +34,6 @@ export function useUpdateRoomType() {
       queryClient.invalidateQueries({ queryKey: queryKeys.selectableRoomTypes });
     },
   });
-}
+};
+
+export { useAllRoomTypes, useUpdateRoomType };

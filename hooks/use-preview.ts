@@ -5,7 +5,7 @@ import { useRoomTypes, usePriceBook, useStyles } from '@/hooks/use-catalog';
 import { queryKeys } from '@/lib/query-client';
 import { catalogService } from '@/lib/services';
 
-export function usePreviewCatalog(enabled = true) {
+const usePreviewCatalog = (enabled = true) => {
   const skeletons = useQuery({
     queryKey: queryKeys.skeletons,
     queryFn: catalogService.skeletons,
@@ -29,4 +29,6 @@ export function usePreviewCatalog(enabled = true) {
     names: roomTypes.names,
     book: prices.book,
   };
-}
+};
+
+export { usePreviewCatalog };

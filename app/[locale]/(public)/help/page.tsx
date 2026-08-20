@@ -2,19 +2,19 @@ import { getTranslations, setRequestLocale } from 'next-intl/server';
 import { FaqList } from '@/components/content/faq-list';
 import { pageMetadata } from '@/lib/seo';
 
-export async function generateMetadata(props: PageProps<'/[locale]/yordam'>) {
+export async function generateMetadata(props: PageProps<'/[locale]/help'>) {
   const { locale } = await props.params;
   const t = await getTranslations({ locale, namespace: 'help' });
 
   return pageMetadata({
     locale,
-    href: '/yordam',
+    href: '/help',
     title: t('title'),
     description: t('subtitle'),
   });
 }
 
-export default async function HelpPage(props: PageProps<'/[locale]/yordam'>) {
+export default async function HelpPage(props: PageProps<'/[locale]/help'>) {
   const { locale } = await props.params;
   setRequestLocale(locale);
 

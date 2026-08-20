@@ -24,7 +24,7 @@ export default async function NotFound() {
 
       <div className="flex flex-wrap justify-center gap-2">
         <ButtonLink href="/">{t('home')}</ButtonLink>
-        <ButtonLink href="/konstruktor" variant="outline">
+        <ButtonLink href="/constructor" variant="outline">
           {t('constructor')}
         </ButtonLink>
       </div>

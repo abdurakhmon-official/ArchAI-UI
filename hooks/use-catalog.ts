@@ -10,7 +10,7 @@ import { toBook } from '@/lib/price-book';
 import type { RoomTypeLimit } from '@/lib/constructor';
 import { translated } from '@/lib/formatters';
 
-export function useRoomTypes() {
+const useRoomTypes = () => {
   const locale = useLocale();
 
   const query = useQuery({
@@ -27,12 +27,12 @@ export function useRoomTypes() {
         row.code,
         {
           code: row.code,
-          minArea: row.min_area,
-          maxArea: row.max_area,
-          idealRatio: row.ideal_ratio,
-          needsExteriorWall: row.needs_exterior_wall,
-          isWetZone: row.is_wet_zone,
-          accessFrom: row.access_from,
+          minArea: row.minArea,
+          maxArea: row.maxArea,
+          idealRatio: row.idealRatio,
+          needsExteriorWall: row.needsExteriorWall,
+          isWetZone: row.isWetZone,
+          accessFrom: row.accessFrom,
         },
       ]),
     );
@@ -44,9 +44,9 @@ export function useRoomTypes() {
   }, [query.data, locale]);
 
   return { ...query, rules, names, roomTypes: query.data ?? [] };
-}
+};
 
-export function useSelectableRoomTypes() {
+const useSelectableRoomTypes = () => {
   const query = useQuery({
     queryKey: queryKeys.selectableRoomTypes,
     queryFn: catalogService.selectableRoomTypes,
@@ -57,9 +57,9 @@ export function useSelectableRoomTypes() {
     () =>
       (query.data ?? []).map((type) => ({
         code: type.code,
-        min_area: type.min_area,
-        max_count: type.max_count,
-        default_count: type.default_count,
+        minArea: type.minArea,
+        maxCount: type.maxCount,
+        defaultCount: type.defaultCount,
       })),
     [query.data],
   );
@@ -67,31 +67,31 @@ export function useSelectableRoomTypes() {
   const defaults = useMemo<Record<string, number>>(() => {
     const result: Record<string, number> = {};
     for (const type of limits) {
-      if (type.default_count > 0) result[type.code] = type.default_count;
+      if (type.defaultCount > 0) result[type.code] = type.defaultCount;
     }
     return result;
   }, [limits]);
 
   return { ...query, limits, defaults };
-}
+};
 
-export function useStyles() {
+const useStyles = () => {
   return useQuery({
     queryKey: queryKeys.styles,
     queryFn: catalogService.styles,
     staleTime: 30 * 60_000,
   });
-}
+};
 
-export function useFinishLevels() {
+const useFinishLevels = () => {
   return useQuery({
     queryKey: queryKeys.finishLevels,
     queryFn: estimateService.finishLevels,
     staleTime: 30 * 60_000,
   });
-}
+};
 
-export function usePriceBook(finishLevel: string, enabled = true) {
+const usePriceBook = (finishLevel: string, enabled = true) => {
   const items = useQuery({
     queryKey: queryKeys.catalogPrices,
     queryFn: estimateService.priceItems,
@@ -118,4 +118,6 @@ export function usePriceBook(finishLevel: string, enabled = true) {
   }, [items.data, levels.data, finishLevel]);
 
   return { book, items: items.data ?? [], isPending: items.isPending || levels.isPending };
-}
+};
+
+export { useRoomTypes, useSelectableRoomTypes, useStyles, useFinishLevels, usePriceBook };

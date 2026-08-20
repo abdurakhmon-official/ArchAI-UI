@@ -35,7 +35,7 @@ type Action =
   | { type: 'commit' }
   | { type: 'dismiss' };
 
-function reducer(state: State, action: Action): State {
+const reducer = (state: State, action: Action): State => {
   switch (action.type) {
     case 'apply': {
       const merging = action.mergeKey !== undefined && action.mergeKey === state.mergeKey;
@@ -87,14 +87,14 @@ function reducer(state: State, action: Action): State {
     case 'dismiss':
       return { ...state, error: null };
   }
-}
+};
 
 export interface EditorOptions {
   rules: Record<string, RoomTypeRule>;
   style?: Style | null;
 }
 
-export function useEditor(initial: GeometryState, options: EditorOptions) {
+const useEditor = (initial: GeometryState, options: EditorOptions) => {
   const [state, dispatch] = useReducer(reducer, {
     past: [],
     present: initial,
@@ -204,4 +204,6 @@ export function useEditor(initial: GeometryState, options: EditorOptions) {
     validation: derived?.validation ?? null,
     measurements: derived?.measurements ?? null,
   };
-}
+};
+
+export { useEditor };

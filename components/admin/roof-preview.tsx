@@ -64,11 +64,11 @@ export function RoofPreview({ roofStyle, className }: Props) {
       type: roofStyle.family,
       pitch: roofStyle.pitch,
       overhang: roofStyle.overhang,
-      ...(roofStyle.upper_pitch !== null && roofStyle.upper_pitch !== undefined
-        ? { upperPitch: roofStyle.upper_pitch }
+      ...(roofStyle.upperPitch !== null && roofStyle.upperPitch !== undefined
+        ? { upperPitch: roofStyle.upperPitch }
         : {}),
-      ...(roofStyle.break_ratio !== null && roofStyle.break_ratio !== undefined
-        ? { breakRatio: roofStyle.break_ratio }
+      ...(roofStyle.breakRatio !== null && roofStyle.breakRatio !== undefined
+        ? { breakRatio: roofStyle.breakRatio }
         : {}),
     }),
     [roofStyle],

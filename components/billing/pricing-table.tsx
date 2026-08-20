@@ -44,7 +44,7 @@ export function PricingTable() {
   const ready = (providers.data ?? []).filter((provider) => provider.ready);
 
   const active = subscription.data?.subscription;
-  const freeCode = (plans.data ?? []).find((plan) => Number(plan.price_uzs) === 0)?.code;
+  const freeCode = (plans.data ?? []).find((plan) => Number(plan.priceUzs) === 0)?.code;
   const currentCode =
     active && active.status === 'ACTIVE' ? active.plan.code : isAuthenticated ? freeCode : undefined;
 
@@ -65,7 +65,7 @@ export function PricingTable() {
       <div className="grid gap-5 md:grid-cols-3">
         {(plans.data ?? []).map((plan) => {
           const isCurrent = plan.code === currentCode;
-          const isFree = Number(plan.price_uzs) === 0;
+          const isFree = Number(plan.priceUzs) === 0;
 
           return (
             <div
@@ -86,7 +86,7 @@ export function PricingTable() {
                 </div>
 
                 <p className="mt-2 font-mono text-2xl font-semibold tabular-nums">
-                  {isFree ? t('free') : formatDecimal(plan.price_uzs, { locale })}
+                  {isFree ? t('free') : formatDecimal(plan.priceUzs, { locale })}
                   {!isFree ? (
                     <span className="ms-1 text-sm font-normal text-muted-foreground">
                       {t('perMonth')}
@@ -220,7 +220,7 @@ function PlanAction({
   }
 
   if (!isAuthenticated) {
-    return <ButtonLink href="/kirish">{t('signInToBuy')}</ButtonLink>;
+    return <ButtonLink href="/sign-in">{t('signInToBuy')}</ButtonLink>;
   }
 
   if (!providers.length) {

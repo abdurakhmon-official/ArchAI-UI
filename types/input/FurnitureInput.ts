@@ -6,10 +6,10 @@
         ru?: string | undefined;
         en?: string | undefined;
     };
-    gltf_url: string;
-    thumb_url?: (string | undefined) | null;
-    room_types?: string[];
-    style_tags?: string[];
+    gltfUrl: string;
+    thumbUrl?: (string | undefined) | null;
+    roomTypes?: string[];
+    styleTags?: string[];
     footprint: {
         width: number;
         depth: number;

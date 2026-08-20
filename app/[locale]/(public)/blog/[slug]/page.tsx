@@ -2,7 +2,7 @@ import { setRequestLocale } from 'next-intl/server';
 import { BlogPostView } from '@/components/content/blog-post';
 import { translated } from '@/lib/formatters';
 import { pageMetadata } from '@/lib/seo';
-import { fetchPost } from '@/lib/server-api';
+import { getPost } from '@/lib/server-api';
 
 /**
  * Maqola sahifasi.
@@ -15,7 +15,7 @@ import { fetchPost } from '@/lib/server-api';
 
 export async function generateMetadata(props: PageProps<'/[locale]/blog/[slug]'>) {
   const { locale, slug } = await props.params;
-  const post = await fetchPost(slug);
+  const post = await getPost(slug);
 
   if (!post) {
     // Maqola yo'q — sahifa 404 chizadi, sarlavha esa umumiy qoladi.
@@ -45,8 +45,8 @@ export async function generateMetadata(props: PageProps<'/[locale]/blog/[slug]'>
       title,
       ...(description ? { description } : {}),
       type: 'article',
-      ...(post.published_at ? { publishedTime: post.published_at } : {}),
-      ...(post.cover_url ? { images: [post.cover_url] } : {}),
+      ...(post.publishedAt ? { publishedTime: post.publishedAt } : {}),
+      ...(post.coverUrl ? { images: [post.coverUrl] } : {}),
     },
   };
 }

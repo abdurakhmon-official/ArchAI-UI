@@ -1,8 +1,13 @@
-export * from '@/lib/services/archai.service';
+export * from '@/lib/services/project.service';
+export * from '@/lib/services/generation.service';
+export * from '@/lib/services/estimate.service';
+export * from '@/lib/services/catalog.service';
+export * from '@/lib/services/content.service';
+export * from '@/lib/services/billing.service';
+export * from '@/lib/services/admin.service';
+export * from '@/lib/services/media.service';
 export * from '@/lib/services/storage.service';
 
-// Mavjud servislar klass sifatida eksport qilinadi — bir marta yaratib,
-// tayyor nusxa sifatida beramiz, shunda chaqirish joyi bir xil bo'ladi.
 import { AuthService } from '@/lib/services/auth.service';
 import { UserService } from '@/lib/services/user.service';
 

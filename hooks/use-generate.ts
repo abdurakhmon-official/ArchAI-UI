@@ -5,7 +5,7 @@ import { toGenerateParams, type ConstructorParams } from '@/lib/constructor';
 import { queryKeys } from '@/lib/query-client';
 import { generationService } from '@/lib/services';
 
-export function useGenerate(params: ConstructorParams | null) {
+const useGenerate = (params: ConstructorParams | null) => {
   return useQuery({
     queryKey: queryKeys.generate(params ? { ...toGenerateParams(params) } : {}),
     queryFn: () => generationService.generate(toGenerateParams(params!)),
@@ -14,4 +14,6 @@ export function useGenerate(params: ConstructorParams | null) {
     gcTime: 30 * 60_000,
     retry: false,
   });
-}
+};
+
+export { useGenerate };

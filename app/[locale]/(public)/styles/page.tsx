@@ -2,19 +2,19 @@ import { getTranslations, setRequestLocale } from 'next-intl/server';
 import { StylesGrid } from '@/components/content/styles-grid';
 import { pageMetadata } from '@/lib/seo';
 
-export async function generateMetadata(props: PageProps<'/[locale]/uslublar'>) {
+export async function generateMetadata(props: PageProps<'/[locale]/styles'>) {
   const { locale } = await props.params;
   const t = await getTranslations({ locale, namespace: 'styles' });
 
   return pageMetadata({
     locale,
-    href: '/uslublar',
+    href: '/styles',
     title: t('title'),
     description: t('subtitle'),
   });
 }
 
-export default async function StylesPage(props: PageProps<'/[locale]/uslublar'>) {
+export default async function StylesPage(props: PageProps<'/[locale]/styles'>) {
   const { locale } = await props.params;
   setRequestLocale(locale);
 

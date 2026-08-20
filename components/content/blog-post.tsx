@@ -58,17 +58,17 @@ export function BlogPostView({ slug }: { slug: string }) {
         </h1>
 
         <p className="text-sm text-muted-foreground">
-          {data.published_at ? formatDate(data.published_at, locale) : null}
+          {data.publishedAt ? formatDate(data.publishedAt, locale) : null}
           {data.author ? ` · ${data.author.fullName}` : ''}
           {` · ${t('views', { count: data.views })}`}
         </p>
       </header>
 
-      {data.cover_url ? (
+      {data.coverUrl ? (
         <div className="relative aspect-16/9 overflow-hidden rounded-xl bg-muted/40">
           {}
           <Image
-            src={data.cover_url}
+            src={data.coverUrl}
             alt={translated(data.title, locale)}
             fill
             priority

@@ -37,7 +37,7 @@ import type { PlanLimits } from '@/types/domain';
 const NUMERIC: (keyof PlanLimits)[] = ['projects', 'variants', 'versions'];
 const FLAGS: (keyof PlanLimits)[] = ['pdf', 'interior', 'edit', 'watermark'];
 
-type Draft = Record<string, { price_uzs?: number; limits?: PlanLimits }>;
+type Draft = Record<string, { priceUzs?: number; limits?: PlanLimits }>;
 
 export function PlanTable() {
   const t = useTranslations('admin.plans');
@@ -122,7 +122,7 @@ export function PlanTable() {
             {rows.map((plan) => {
               const patch = draft[plan.id] ?? {};
               const limits = patch.limits ?? (plan.limits as PlanLimits);
-              const price = patch.price_uzs ?? toNumber(plan.price_uzs);
+              const price = patch.priceUzs ?? toNumber(plan.priceUzs);
 
               return (
                 <TableRow key={plan.id} className={cn(!plan.active && 'opacity-50')}>
@@ -145,7 +145,7 @@ export function PlanTable() {
                       onChange={(event) => {
                         const value = Number(event.target.value);
                         if (Number.isFinite(value) && value >= 0) {
-                          change(plan.id, { price_uzs: value });
+                          change(plan.id, { priceUzs: value });
                         }
                       }}
                     />
@@ -265,7 +265,7 @@ export function PlanTable() {
                       </span>
                     </TableCell>
                     <TableCell className="whitespace-nowrap text-muted-foreground">
-                      {row.period_end ? formatDate(row.period_end, locale) : '—'}
+                      {row.periodEnd ? formatDate(row.periodEnd, locale) : '—'}
                     </TableCell>
                     <TableCell className="text-end font-mono tabular-nums">
                       {row.payments[0]

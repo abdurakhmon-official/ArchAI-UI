@@ -167,7 +167,7 @@ function MediaCard({ file }: { file: MediaFile }) {
           // eslint-disable-next-line @next/next/no-img-element
           <img
             src={file.url}
-            alt={file.original_name}
+            alt={file.originalName}
             loading="lazy"
             className="h-full w-full object-cover"
           />
@@ -178,13 +178,13 @@ function MediaCard({ file }: { file: MediaFile }) {
         )}
       </div>
 
-      <p className="truncate text-sm" title={file.original_name}>
-        {file.original_name}
+      <p className="truncate text-sm" title={file.originalName}>
+        {file.originalName}
       </p>
 
       <p className="text-xs text-muted-foreground">
         {formatBytes(file.size, locale)}
-        {` · ${formatDate(file.created_at, locale)}`}
+        {` · ${formatDate(file.createdAt, locale)}`}
       </p>
 
       <p className="truncate text-xs text-muted-foreground" title={file.uploader?.email}>
@@ -309,7 +309,7 @@ function Orphans() {
           <ul className="max-h-48 overflow-y-auto text-xs text-muted-foreground">
             {items.slice(0, 50).map((item) => (
               <li key={item.id} className="truncate py-0.5">
-                {item.original_name} · {formatBytes(item.size, locale)}
+                {item.originalName} · {formatBytes(item.size, locale)}
               </li>
             ))}
           </ul>

@@ -25,7 +25,7 @@ import type { RoomType } from '@/types/domain';
  * Xona turlari.
  *
  * Bu jadvaldagi har bir raqam generatorga to'g'ridan-to'g'ri tushadi:
- * `min_area` ni 9 dan 14 ga ko'tarish bundan keyin yaratiladigan hamma
+ * `minArea` ni 9 dan 14 ga ko'tarish bundan keyin yaratiladigan hamma
  * uyni o'zgartiradi. Shu sababli o'ng tomonda jonli reja — o'zgarish
  * natijasi SAQLASHDAN OLDIN ko'rinadi, narxlar ekranidagi etalon uy
  * bilan bir xil g'oya.
@@ -36,9 +36,9 @@ import type { RoomType } from '@/types/domain';
  */
 
 /** Tahrirlanadigan raqamli maydonlar. */
-type Field = 'min_area' | 'max_area' | 'max_count' | 'default_count';
+type Field = 'minArea' | 'maxArea' | 'maxCount' | 'defaultCount';
 
-const FIELDS: Field[] = ['min_area', 'max_area', 'max_count', 'default_count'];
+const FIELDS: Field[] = ['minArea', 'maxArea', 'maxCount', 'defaultCount'];
 
 /**
  * Saqlanmagan o'zgarishlar.
@@ -78,7 +78,7 @@ export function RoomTypeTable() {
   /**
    * Ketma-ket saqlaymiz, parallel emas.
    *
-   * Server har o'zgarishni jurnalga yozadi va `default_count <= max_count`
+   * Server har o'zgarishni jurnalga yozadi va `defaultCount <= maxCount`
    * ni mavjud qatorga qarab tekshiradi — parallel yuborilganda bu
    * tekshiruv eskirgan qiymatni ko'rishi mumkin.
    */
@@ -175,11 +175,11 @@ export function RoomTypeTable() {
                     {FIELDS.map((field) => (
                       <TableCell key={field} className="text-end">
                         <NumberField
-                          label={`${translated(row.name, locale)} — ${t(field === 'min_area' ? 'minArea' : field === 'max_area' ? 'maxArea' : field === 'max_count' ? 'maxCount' : 'defaultCount')}`}
+                          label={`${translated(row.name, locale)} — ${t(field)}`}
                           value={changes[field] ?? row[field]}
                           saved={row[field]}
-                          step={field.endsWith('area') ? 0.5 : 1}
-                          disabled={!selectable && field.endsWith('count')}
+                          step={field.endsWith('Area') ? 0.5 : 1}
+                          disabled={!selectable && field.endsWith('Count')}
                           onChange={(value) => changeNumber(row.code, field, value)}
                         />
                       </TableCell>

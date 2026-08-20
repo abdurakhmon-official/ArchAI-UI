@@ -30,7 +30,7 @@ export function AdminGuard({ children }: { children: React.ReactNode }) {
    * `useSession` cookie'ni o'qiydi, cookie esa serverda mavjud emas —
    * ya'ni server "ruxsat yo'q" ni, brauzer esa "yuklanmoqda" ni
    * chizardi va React butun daraxtni qayta qurardi. Bu yerda shoxlanish
-   * bor, shuning uchun gidratatsiya darvozasi kerak; `/kabinet` kabi
+   * bor, shuning uchun gidratatsiya darvozasi kerak; `/dashboard` kabi
    * sahifalarda u kerak emas, chunki ular shoxlanmaydi.
    */
   if (!hydrated || loading) {

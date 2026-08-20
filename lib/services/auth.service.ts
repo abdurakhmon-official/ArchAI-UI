@@ -6,6 +6,7 @@ import type { UpdateProfileInput } from '@/types/input/UpdateProfileInput';
 import type { UpdatePasswordInput } from '@/types/input/UpdatePasswordInput';
 import type { ForgotPasswordInput } from '@/types/input/ForgotPasswordInput';
 import type { ResetPasswordInput } from '@/types/input/ResetPasswordInput';
+import type { PasswordStrengthInput } from '@/types/input/PasswordStrengthInput';
 
 
 export class AuthService extends BaseService<User, SignupInput, UpdateProfileInput> {
@@ -41,6 +42,10 @@ export class AuthService extends BaseService<User, SignupInput, UpdateProfileInp
 
   async resetPassword(input: ResetPasswordInput) {
     return this.sendPost<never>('/reset-password', input);
+  }
+
+  async passwordStrength(input: PasswordStrengthInput) {
+    return this.sendPost<{ score: 0 | 1 | 2 | 3 | 4 }>('/password-strength', input);
   }
 
   async sendVerification() {

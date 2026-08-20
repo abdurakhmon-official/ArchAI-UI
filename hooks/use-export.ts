@@ -9,7 +9,9 @@ import { jobService, projectService } from '@/lib/services';
 const POLL_MS = 1500;
 const MAX_POLLS = 60;
 
-export function useProjectPdf(projectId: string) {
+export type RenderView = 'exterior' | 'cutaway' | 'interior';
+
+const useProjectPdf = (projectId: string) => {
   const locale = useLocale();
   const [jobId, setJobId] = useState<string | null>(null);
   const [url, setUrl] = useState<string | null>(null);
@@ -62,9 +64,9 @@ export function useProjectPdf(projectId: string) {
     error: request.error ?? (job.data?.state === 'failed' ? new Error(job.data.error ?? '') : null),
     timedOut,
   };
-}
+};
 
-export function useProjectRender(projectId: string) {
+const useProjectRender = (projectId: string) => {
   const [view, setView] = useState<RenderView>('exterior');
   const [jobId, setJobId] = useState<string | null>(null);
   const [url, setUrl] = useState<string | null>(null);
@@ -119,6 +121,6 @@ export function useProjectRender(projectId: string) {
     error: request.error ?? (job.data?.state === 'failed' ? new Error(job.data.error ?? '') : null),
     timedOut,
   };
-}
+};
 
-export type RenderView = 'exterior' | 'cutaway' | 'interior';
+export { useProjectPdf, useProjectRender };

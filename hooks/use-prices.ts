@@ -5,40 +5,40 @@ import { queryKeys } from '@/lib/query-client';
 import { priceAdminService } from '@/lib/services';
 import type { Translated } from '@/types/domain';
 
-export function usePriceItems() {
+const usePriceItems = () => {
   return useQuery({
     queryKey: queryKeys.priceItems,
     queryFn: priceAdminService.items,
     staleTime: 30_000,
   });
-}
+};
 
-export function usePriceImpact() {
+const usePriceImpact = () => {
   return useQuery({
     queryKey: queryKeys.priceImpact,
     queryFn: priceAdminService.impact,
     staleTime: 5 * 60_000,
   });
-}
+};
 
-export function useFinishPresets() {
+const useFinishPresets = () => {
   return useQuery({
     queryKey: queryKeys.finishLevels,
     queryFn: priceAdminService.finishLevels,
     staleTime: 30_000,
   });
-}
+};
 
-function useInvalidatePrices() {
+const useInvalidatePrices = () => {
   const queryClient = useQueryClient();
 
   return () => {
     queryClient.invalidateQueries({ queryKey: queryKeys.priceItems });
     queryClient.invalidateQueries({ queryKey: queryKeys.finishLevels });
   };
-}
+};
 
-export function useUpdatePriceItem() {
+const useUpdatePriceItem = () => {
   const invalidate = useInvalidatePrices();
 
   return useMutation({
@@ -47,15 +47,15 @@ export function useUpdatePriceItem() {
       ...input
     }: {
       id: string;
-      unit_price?: number;
+      unitPrice?: number;
       sort?: number;
       active?: boolean;
     }) => priceAdminService.updateItem(id, input),
     onSuccess: invalidate,
   });
-}
+};
 
-export function useCreateOption() {
+const useCreateOption = () => {
   const invalidate = useInvalidatePrices();
 
   return useMutation({
@@ -66,13 +66,13 @@ export function useCreateOption() {
       itemId: string;
       code: string;
       name: Translated;
-      unit_price: number;
+      unitPrice: number;
     }) => priceAdminService.createOption(itemId, input),
     onSuccess: invalidate,
   });
-}
+};
 
-export function useUpdateOption() {
+const useUpdateOption = () => {
   const invalidate = useInvalidatePrices();
 
   return useMutation({
@@ -81,24 +81,24 @@ export function useUpdateOption() {
       ...input
     }: {
       optionId: string;
-      unit_price?: number;
+      unitPrice?: number;
       name?: Translated;
       active?: boolean;
     }) => priceAdminService.updateOption(optionId, input),
     onSuccess: invalidate,
   });
-}
+};
 
-export function useDeleteOption() {
+const useDeleteOption = () => {
   const invalidate = useInvalidatePrices();
 
   return useMutation({
     mutationFn: (optionId: string) => priceAdminService.deleteOption(optionId),
     onSuccess: invalidate,
   });
-}
+};
 
-export function useUpdateFinishPreset() {
+const useUpdateFinishPreset = () => {
   const invalidate = useInvalidatePrices();
 
   return useMutation({
@@ -106,4 +106,15 @@ export function useUpdateFinishPreset() {
       priceAdminService.updateFinishLevel(code, defaults),
     onSuccess: invalidate,
   });
-}
+};
+
+export {
+  usePriceItems,
+  usePriceImpact,
+  useFinishPresets,
+  useUpdatePriceItem,
+  useCreateOption,
+  useUpdateOption,
+  useDeleteOption,
+  useUpdateFinishPreset,
+};

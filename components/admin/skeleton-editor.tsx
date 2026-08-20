@@ -105,8 +105,8 @@ export function SkeletonEditor() {
       bounds: {
         x: 0,
         y: 0,
-        width: (current.min_width + current.max_width) / 2,
-        length: (current.min_length + current.max_length) / 2,
+        width: (current.minWidth + current.maxWidth) / 2,
+        length: (current.minLength + current.maxLength) / 2,
       },
       floors: current.tree.floors,
       extras: [],
@@ -154,12 +154,12 @@ export function SkeletonEditor() {
         name: current.name,
         floors: current.floors,
         tree: current.tree,
-        tag_bedrooms: current.tag_bedrooms,
-        tag_styles: current.tag_styles,
-        min_width: current.min_width,
-        max_width: current.max_width,
-        min_length: current.min_length,
-        max_length: current.max_length,
+        tagBedrooms: current.tagBedrooms,
+        tagStyles: current.tagStyles,
+        minWidth: current.minWidth,
+        maxWidth: current.maxWidth,
+        minLength: current.minLength,
+        maxLength: current.maxLength,
         status: current.status,
       });
       setDraft({});
@@ -176,12 +176,12 @@ export function SkeletonEditor() {
         name: t('newName'),
         floors: 1,
         tree: { floors: [{ level: 1, tree: STARTER_TREE }] },
-        tag_bedrooms: [],
-        tag_styles: [],
-        min_width: 8,
-        max_width: 16,
-        min_length: 8,
-        max_length: 16,
+        tagBedrooms: [],
+        tagStyles: [],
+        minWidth: 8,
+        maxWidth: 16,
+        minLength: 8,
+        maxLength: 16,
         status: 'DRAFT',
       });
 
@@ -284,26 +284,26 @@ export function SkeletonEditor() {
 
               <Field label={t('widthRange')} hint={t('rangeHint')}>
                 <Range
-                  min={current.min_width}
-                  max={current.max_width}
+                  min={current.minWidth}
+                  max={current.maxWidth}
                   label={t('widthRange')}
-                  onChange={(min_width, max_width) => change({ min_width, max_width })}
+                  onChange={(minWidth, maxWidth) => change({ minWidth, maxWidth })}
                 />
               </Field>
 
               <Field label={t('lengthRange')}>
                 <Range
-                  min={current.min_length}
-                  max={current.max_length}
+                  min={current.minLength}
+                  max={current.maxLength}
                   label={t('lengthRange')}
-                  onChange={(min_length, max_length) => change({ min_length, max_length })}
+                  onChange={(minLength, maxLength) => change({ minLength, maxLength })}
                 />
               </Field>
 
               <Field label={t('bedrooms')} hint={t('bedroomsHint')}>
                 <div className="flex flex-wrap gap-1.5">
                   {[1, 2, 3, 4, 5, 6].map((count) => {
-                    const on = current.tag_bedrooms.includes(count);
+                    const on = current.tagBedrooms.includes(count);
 
                     return (
                       <button
@@ -312,9 +312,9 @@ export function SkeletonEditor() {
                         aria-pressed={on}
                         onClick={() =>
                           change({
-                            tag_bedrooms: on
-                              ? current.tag_bedrooms.filter((value) => value !== count)
-                              : [...current.tag_bedrooms, count].sort((a, b) => a - b),
+                            tagBedrooms: on
+                              ? current.tagBedrooms.filter((value: number) => value !== count)
+                              : [...current.tagBedrooms, count].sort((a, b) => a - b),
                           })
                         }
                         className={cn(
@@ -334,7 +334,7 @@ export function SkeletonEditor() {
               <Field label={t('styles')} hint={t('stylesHint')}>
                 <div className="flex flex-wrap gap-1.5">
                   {(styles.data ?? []).map((style) => {
-                    const on = current.tag_styles.includes(style.slug);
+                    const on = current.tagStyles.includes(style.slug);
 
                     return (
                       <button
@@ -343,9 +343,9 @@ export function SkeletonEditor() {
                         aria-pressed={on}
                         onClick={() =>
                           change({
-                            tag_styles: on
-                              ? current.tag_styles.filter((value) => value !== style.slug)
-                              : [...current.tag_styles, style.slug],
+                            tagStyles: on
+                              ? current.tagStyles.filter((value: string) => value !== style.slug)
+                              : [...current.tagStyles, style.slug],
                           })
                         }
                         className={cn(

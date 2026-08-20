@@ -40,12 +40,12 @@ export function SkeletonCoverage({ skeleton, all, className }: Props) {
     name: item.name,
     floors: item.floors,
     tree: item.tree,
-    tag_bedrooms: item.tag_bedrooms,
-    tag_styles: item.tag_styles,
-    min_width: item.min_width,
-    max_width: item.max_width,
-    min_length: item.min_length,
-    max_length: item.max_length,
+    tagBedrooms: item.tagBedrooms,
+    tagStyles: item.tagStyles,
+    minWidth: item.minWidth,
+    maxWidth: item.maxWidth,
+    minLength: item.minLength,
+    maxLength: item.maxLength,
   });
 
   /**
@@ -95,8 +95,8 @@ export function SkeletonCoverage({ skeleton, all, className }: Props) {
     const self = rows.find((row) => row.id === skeleton.id);
     if (!self) return [];
 
-    const width = (skeleton.min_width + skeleton.max_width) / 2;
-    const length = (skeleton.min_length + skeleton.max_length) / 2;
+    const width = (skeleton.minWidth + skeleton.maxWidth) / 2;
+    const length = (skeleton.minLength + skeleton.maxLength) / 2;
 
     return BEDROOMS.map((bedrooms) => {
       const query = { floors: skeleton.floors, bedrooms, width, length };

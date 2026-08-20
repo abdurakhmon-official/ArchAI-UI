@@ -56,7 +56,7 @@ export function View3D({ house, appearance = null, projectId, className }: Props
             </ModeButton>
             {interiorLocked ? (
               <Link
-                href="/narxlash"
+                href="/pricing"
                 title={t('interiorLocked')}
                 className="flex items-center gap-1.5 rounded-md px-2.5 py-1 text-sm font-medium text-muted-foreground transition-colors hover:text-foreground"
               >

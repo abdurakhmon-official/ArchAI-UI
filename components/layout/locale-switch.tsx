@@ -31,12 +31,12 @@ export function LocaleSwitch() {
     if (next === locale) return;
 
     /*
-      `params` uzatiladi: dinamik segmentli manzillarda (`/loyiha/[id]`)
+      `params` uzatiladi: dinamik segmentli manzillarda (`/project/[id]`)
       usiz yo'l noto'g'ri quriladi.
 
       Butun obyekt `any` ga o'giriladi, faqat `params` emas.
       `next-intl` `replace` uchun manzil va uning parametrlarini
-      BOG'LANGAN birlashma sifatida kutadi ("`/loyiha/[id]` bo'lsa
+      BOG'LANGAN birlashma sifatida kutadi ("`/project/[id]` bo'lsa
       `params.id` bo'lsin"), bu yerda esa `pathname` ish paytida
       aniqlanadigan qiymat — ya'ni birlashmaning istalgan a'zosi.
       TypeScript buni tekshira olmaydi: marshrutlar soni o'sgani sari

@@ -21,7 +21,7 @@ import type { Style } from '@/types/domain';
 /**
  * Uy uslublari.
  *
- * `/admin/tom-uslublari` faqat TOM presetlarini boshqaradi. Uy uslubi
+ * `/admin/roof-styles` faqat TOM presetlarini boshqaradi. Uy uslubi
  * esa butun ko'rinishni belgilaydi: fasad va interyer ranglari, deraza
  * proporsiyalari, pol qoplamalari va reja qoidalari. API to'liq tayyor
  * edi, ekrani yo'q edi — ya'ni bazadagi qiymatlarni faqat urug'lantirish
@@ -72,7 +72,7 @@ const BLANK = {
     skirting: '#FFFFFF',
     floorByRoomType: {},
   },
-  layout_rules: { corridorWidth: 1.4, openKitchen: false, minAreaFactor: 1 },
+  layoutRules: { corridorWidth: 1.4, openKitchen: false, minAreaFactor: 1 },
 } as const;
 
 const STATUSES = ['DRAFT', 'PUBLISHED', 'ARCHIVED'] as const;
@@ -114,12 +114,12 @@ export function StyleEditor() {
 
     /*
       Tom preseti almashsa, bog'langan yozuv ham almashishi kerak:
-      `roof_style_id` qoralamada, `roof_style` esa serverdan kelgan
+      `roofStyleId` qoralamada, `roofStyle` esa serverdan kelgan
       eski qiymatda qolib ketardi va 3D eski tomni ko'rsatardi.
     */
-    if ('roof_style_id' in draft) {
-      merged.roof_style =
-        (roofStyles.data ?? []).find((item) => item.id === draft.roof_style_id) ?? null;
+    if ('roofStyleId' in draft) {
+      merged.roofStyle =
+        (roofStyles.data ?? []).find((item) => item.id === draft.roofStyleId) ?? null;
     }
 
     return merged;
@@ -128,7 +128,7 @@ export function StyleEditor() {
   const facade = (preview?.facade ?? {}) as Facade;
   const window = (preview?.window ?? {}) as Window;
   const interior = (preview?.interior ?? {}) as Interior;
-  const layout = (preview?.layout_rules ?? {}) as Layout;
+  const layout = (preview?.layoutRules ?? {}) as Layout;
 
   const dirty = Object.keys(draft).length > 0;
 
@@ -141,7 +141,7 @@ export function StyleEditor() {
   const patchFacade = (patch: Facade) => change({ facade: { ...facade, ...patch } });
   const patchWindow = (patch: Window) => change({ window: { ...window, ...patch } });
   const patchInterior = (patch: Interior) => change({ interior: { ...interior, ...patch } });
-  const patchLayout = (patch: Layout) => change({ layout_rules: { ...layout, ...patch } });
+  const patchLayout = (patch: Layout) => change({ layoutRules: { ...layout, ...patch } });
 
   const save = async () => {
     if (!selected || !dirty) return;
@@ -270,8 +270,8 @@ export function StyleEditor() {
                 folder="style-preview"
                 label={t('previewImage')}
                 hint={t('previewImageHint')}
-                value={preview.preview_url}
-                onChange={(preview_url) => change({ preview_url })}
+                value={preview.previewUrl}
+                onChange={(previewUrl) => change({ previewUrl })}
               />
             </Group>
 
@@ -285,8 +285,8 @@ export function StyleEditor() {
               <Field label={t('roofPreset')} hint={t('roofPresetHint')}>
                 <div className="flex flex-wrap gap-1.5">
                   <Choice
-                    active={!preview.roof_style_id}
-                    onClick={() => change({ roof_style_id: null })}
+                    active={!preview.roofStyleId}
+                    onClick={() => change({ roofStyleId: null })}
                   >
                     {t('roofFromJson')}
                   </Choice>
@@ -294,8 +294,8 @@ export function StyleEditor() {
                   {(roofStyles.data ?? []).map((item) => (
                     <Choice
                       key={item.id}
-                      active={preview.roof_style_id === item.id}
-                      onClick={() => change({ roof_style_id: item.id })}
+                      active={preview.roofStyleId === item.id}
+                      onClick={() => change({ roofStyleId: item.id })}
                     >
                       {translated(item.name, locale) || item.code}
                     </Choice>

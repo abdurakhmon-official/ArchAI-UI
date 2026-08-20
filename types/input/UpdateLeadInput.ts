@@ -2,5 +2,5 @@
 
  export type UpdateLeadInput = {
     status?: unknown | undefined;
-    admin_note?: (string | null) | undefined;
+    adminNote?: (string | null) | undefined;
 };

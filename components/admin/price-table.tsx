@@ -99,9 +99,9 @@ export function PriceTable() {
 
         if (optionCode) {
           const option = item.options.find((entry) => entry.code === optionCode);
-          if (option) await updateOption.mutateAsync({ optionId: option.id, unit_price: price });
+          if (option) await updateOption.mutateAsync({ optionId: option.id, unitPrice: price });
         } else {
-          await updateItem.mutateAsync({ id: item.id, unit_price: price });
+          await updateItem.mutateAsync({ id: item.id, unitPrice: price });
         }
       }
 
@@ -241,7 +241,7 @@ function ItemRows({
 
         <TableCell>
           <PriceField
-            value={draft[item.code] ?? toNumber(item.unit_price)}
+            value={draft[item.code] ?? toNumber(item.unitPrice)}
             changed={draft[item.code] !== undefined}
             unit={item.unit}
             /**
@@ -322,7 +322,7 @@ function OptionRow({
 
       <TableCell>
         <PriceField
-          value={draft[key] ?? toNumber(option.unit_price)}
+          value={draft[key] ?? toNumber(option.unitPrice)}
           changed={draft[key] !== undefined}
           unit={item.unit}
           onChange={(value) => onPrice(key, value)}
@@ -364,7 +364,7 @@ function NewOptionRow({ itemId, onDone }: { itemId: string; onDone: () => void }
         // Kod nomdan yasaladi: admin uni alohida o'ylab topishi shart emas.
         code: slugify(name),
         name: { uz: name.trim() },
-        unit_price: value,
+        unitPrice: value,
       },
       { onSuccess: onDone },
     );

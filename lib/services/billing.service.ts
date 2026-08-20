@@ -34,8 +34,6 @@ export const billingService = {
   },
 };
 
-// --- Admin: tariflar ---------------------------------------------------------------
-
 export interface AdminPlan extends Plan {
   active: boolean;
   _count?: { subscriptions: number };
@@ -45,13 +43,13 @@ export interface AdminSubscription {
   id: string;
   status: string;
   provider: PaymentProvider | null;
-  period_start: string | null;
-  period_end: string | null;
-  auto_renew: boolean;
-  created_at: string;
+  periodStart: string | null;
+  periodEnd: string | null;
+  autoRenew: boolean;
+  createdAt: string;
   plan: { code: string; name: Translated };
   user: { id: string; fullName: string; email: string } | null;
-  payments: { status: string; amount: string; currency: string; paid_at: string | null }[];
+  payments: { status: string; amount: string; currency: string; paidAt: string | null }[];
 }
 
 export const planAdminService = {

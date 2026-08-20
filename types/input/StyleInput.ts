@@ -21,7 +21,7 @@
         upperPitch?: number | undefined;
         breakRatio?: number | undefined;
     };
-    roof_style_id?: (string | undefined) | null;
+    roofStyleId?: (string | undefined) | null;
     facade: {
         material: string;
         primary: string;
@@ -42,15 +42,15 @@
         };
         skirting?: string | undefined;
     };
-    layout_rules: {
+    layoutRules: {
         corridorWidth?: number;
         openKitchen?: boolean;
         minAreaFactor?: number;
     };
-    furniture_sets?: {
+    furnitureSets?: {
         [x: string]: string[];
     } | undefined;
-    preview_url?: (string | undefined) | null;
+    previewUrl?: (string | undefined) | null;
     status?: unknown;
     sort?: number;
 };

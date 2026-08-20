@@ -57,10 +57,10 @@ function Home() {
           <p className="mt-5 max-w-xl text-lg text-muted-foreground">{t('subtitle')}</p>
 
           <div className="mt-8 flex flex-wrap gap-3">
-            <ButtonLink size="lg" href="/konstruktor">
+            <ButtonLink size="lg" href="/constructor">
               {t('cta')}
             </ButtonLink>
-            <ButtonLink size="lg" variant="outline" href="/uslublar">
+            <ButtonLink size="lg" variant="outline" href="/styles">
               {t('howItWorks')}
             </ButtonLink>
           </div>

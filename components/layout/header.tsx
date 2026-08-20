@@ -14,15 +14,15 @@ import { Link, usePathname } from '@/i18n/navigation';
 import { useAppSelector } from '@/store/hooks';
 import { cn } from '@/lib/utils';
 
-type StaticPath = '/' | '/konstruktor' | '/uslublar' | '/narxlash' | '/blog' | '/yordam' | '/biz-haqimizda';
+type StaticPath = '/' | '/constructor' | '/styles' | '/pricing' | '/blog' | '/help' | '/about';
 
 const NAV: Array<{ href: StaticPath; key: string }> = [
   { href: '/', key: 'home' },
-  { href: '/konstruktor', key: 'constructor' },
-  { href: '/uslublar', key: 'styles' },
-  { href: '/narxlash', key: 'pricing' },
+  { href: '/constructor', key: 'constructor' },
+  { href: '/styles', key: 'styles' },
+  { href: '/pricing', key: 'pricing' },
   { href: '/blog', key: 'blog' },
-  { href: '/yordam', key: 'help' },
+  { href: '/help', key: 'help' },
 ];
 
 export function Header() {
@@ -109,14 +109,14 @@ export function Header() {
                 <div className="mt-6 flex flex-col gap-2 border-t pt-6 sm:hidden">
                   <ButtonLink
                     variant="outline"
-                    href="/kirish"
+                    href="/sign-in"
                     onClick={() => setOpen(false)}
                     className="w-full"
                   >
                     {t('signIn')}
                   </ButtonLink>
                   <ButtonLink
-                    href="/royxatdan-otish"
+                    href="/sign-up"
                     onClick={() => setOpen(false)}
                     className="w-full"
                   >

@@ -16,18 +16,18 @@ async function get<T>(path: string): Promise<T | null> {
   }
 }
 
-export function fetchPost(slug: string): Promise<BlogPostDetail | null> {
+export function getPost(slug: string): Promise<BlogPostDetail | null> {
   return get<BlogPostDetail>(`/blog/${encodeURIComponent(slug)}`);
 }
 
-export async function fetchPostSlugs(): Promise<Array<{ slug: string; updated: string | null }>> {
-  const posts = await get<Array<{ slug: string; published_at: string | null }>>('/blog?limit=50');
+export async function getPostSlugs(): Promise<Array<{ slug: string; updated: string | null }>> {
+  const posts = await get<Array<{ slug: string; publishedAt: string | null }>>('/blog?limit=50');
   if (!posts) return [];
 
-  return posts.map((post) => ({ slug: post.slug, updated: post.published_at }));
+  return posts.map((post) => ({ slug: post.slug, updated: post.publishedAt }));
 }
 
-export async function fetchStyleSlugs(): Promise<string[]> {
+export async function getStyleSlugs(): Promise<string[]> {
   const styles = await get<Style[]>('/styles');
   return styles?.map((style) => style.slug) ?? [];
 }

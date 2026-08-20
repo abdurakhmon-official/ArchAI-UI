@@ -7,7 +7,7 @@ export interface CatalogPriceItem {
   category: string;
   name: unknown;
   unit: string;
-  unit_price: string | number;
+  unitPrice: string | number;
   measure: string;
   sort: number;
   active: boolean;
@@ -19,8 +19,8 @@ export interface CatalogPriceOption {
   code: string;
   name: unknown;
   description: unknown;
-  unit_price: string | number;
-  image_url: string | null;
+  unitPrice: string | number;
+  imageUrl: string | null;
   sort: number;
   active: boolean;
 }
@@ -31,7 +31,7 @@ export interface BookOptions {
   finishLevel?: string;
 }
 
-export function toBook(items: CatalogPriceItem[], options: BookOptions = {}): PriceBook {
+const toBook = (items: CatalogPriceItem[], options: BookOptions = {}): PriceBook => {
   const { draft = {}, finishDefaults = {}, finishLevel = 'standard' } = options;
 
   return {
@@ -42,7 +42,7 @@ export function toBook(items: CatalogPriceItem[], options: BookOptions = {}): Pr
         category: item.category as PriceCategory,
         name: item.name,
         unit: item.unit,
-        unitPrice: draft[item.code] ?? toNumber(item.unit_price),
+        unitPrice: draft[item.code] ?? toNumber(item.unitPrice),
         measure: item.measure,
         sort: item.sort,
         options: item.options
@@ -51,12 +51,14 @@ export function toBook(items: CatalogPriceItem[], options: BookOptions = {}): Pr
             code: option.code,
             name: option.name,
             description: option.description,
-            unitPrice: draft[`${item.code}:${option.code}`] ?? toNumber(option.unit_price),
-            imageUrl: option.image_url,
+            unitPrice: draft[`${item.code}:${option.code}`] ?? toNumber(option.unitPrice),
+            imageUrl: option.imageUrl,
             sort: option.sort,
           })),
       })),
     finishDefaults,
     finishLevel,
   };
-}
+};
+
+export { toBook };

@@ -2,15 +2,7 @@ import api from '@/lib/axios';
 import { unwrap } from '@/lib/services/unwrap';
 import type { GenerateParams, GenerateResult, GeometryState, Variant } from '@/types/domain';
 
-// --- Generatsiya -----------------------------------------------------------
-
 export const generationService = {
-  /**
-   * Variantlar yaratish.
-   *
-   * Token bo'lsa axios uni o'zi qo'shadi: mehmon 1 ta variant oladi,
-   * kirgan foydalanuvchi tarifi bo'yicha ko'proq.
-   */
   async generate(params: GenerateParams): Promise<GenerateResult> {
     const { data } = await api.post<{
       data: Variant[];
@@ -21,15 +13,6 @@ export const generationService = {
   },
 };
 
-// --- Geometriya ------------------------------------------------------------
-
-/**
- * Tahrirlash amallari.
- *
- * DIQQAT: bular saqlashdan oldingi tekshiruv uchun. Jonli tahrirlash
- * brauzerda `lib/geometry` bilan bajariladi — har devor surilganda
- * serverga borish sekin va foydalanuvchi buni sezadi.
- */
 export const geometryService = {
   addRoom(geometry: GeometryState, level: number, roomType: string) {
     return unwrap<GeometryState>(api.post('/geometry/room/add', { geometry, level, roomType }));

@@ -90,7 +90,7 @@ function Fields({ user }: { user: User }) {
           ishlashiga ishonch hosil qilish foydalanuvchining o'z
           manfaati.
         */}
-        {user.email_verified ? null : <VerifyNotice />}
+        {user.emailVerified ? null : <VerifyNotice />}
       </div>
 
       <ImageUpload

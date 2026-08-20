@@ -14,19 +14,19 @@ import type { ResetPasswordInput } from '@/types/input/ResetPasswordInput';
 import type { SigninInput } from '@/types/input/SigninInput';
 import type { SignupInput } from '@/types/input/SignupInput';
 
-function unwrap<T>(envelope: { data: T }): T {
+const unwrap = <T,>(envelope: { data: T }): T => {
   return envelope.data;
-}
+};
 
-function storeToken(token: AccessToken): void {
+const storeToken = (token: AccessToken): void => {
   Cookie.set(TOKEN_COOKIE, token.accessToken, {
     expires: token.expiresIn / 86_400,
     sameSite: 'lax',
     secure: window.location.protocol === 'https:',
   });
-}
+};
 
-export function useSession() {
+const useSession = () => {
   const dispatch = useAppDispatch();
   const user = useAppSelector((state) => state.auth.user);
   const hasToken = typeof window !== 'undefined' && Boolean(Cookie.get(TOKEN_COOKIE));
@@ -51,9 +51,9 @@ export function useSession() {
     loading: hasToken && !user && query.isPending,
     isAuthenticated: Boolean(user),
   };
-}
+};
 
-export function useSignIn() {
+const useSignIn = () => {
   const dispatch = useAppDispatch();
   const queryClient = useQueryClient();
 
@@ -70,9 +70,9 @@ export function useSignIn() {
       queryClient.setQueryData(queryKeys.me, user);
     },
   });
-}
+};
 
-export function useSignUp() {
+const useSignUp = () => {
   const dispatch = useAppDispatch();
   const queryClient = useQueryClient();
 
@@ -89,9 +89,9 @@ export function useSignUp() {
       queryClient.setQueryData(queryKeys.me, user);
     },
   });
-}
+};
 
-export function useSignOut() {
+const useSignOut = () => {
   const dispatch = useAppDispatch();
   const queryClient = useQueryClient();
 
@@ -100,31 +100,42 @@ export function useSignOut() {
     dispatch(logout());
     queryClient.clear();
   }, [dispatch, queryClient]);
-}
+};
 
-export function useForgotPassword() {
+const useForgotPassword = () => {
   return useMutation({
     mutationFn: (input: ForgotPasswordInput) => authService.forgotPassword(input),
   });
-}
+};
 
-export function useResetPassword() {
+const useResetPassword = () => {
   return useMutation({
     mutationFn: (input: ResetPasswordInput) => authService.resetPassword(input),
   });
-}
+};
 
-export function useVerifyEmail() {
+const useVerifyEmail = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
     mutationFn: (token: string) => authService.verifyEmail(token),
     onSuccess: () => queryClient.invalidateQueries({ queryKey: queryKeys.me }),
   });
-}
+};
 
-export function useSendVerification() {
+const useSendVerification = () => {
   return useMutation({
     mutationFn: () => authService.sendVerification(),
   });
-}
+};
+
+export {
+  useSession,
+  useSignIn,
+  useSignUp,
+  useSignOut,
+  useForgotPassword,
+  useResetPassword,
+  useVerifyEmail,
+  useSendVerification,
+};
